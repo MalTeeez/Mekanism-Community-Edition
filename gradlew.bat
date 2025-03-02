@@ -52,8 +52,9 @@ echo location of your Java installation.
 goto fail
 
 :findJavaFromJavaHome
-set JAVA_HOME=%JAVA_HOME:"=%
+set JAVA_HOME=C:/Program Files/Eclipse Adoptium/jdk-8.0.442.6-hotspot
 set JAVA_EXE=%JAVA_HOME%/bin/java.exe
+echo %JAVA_EXE%
 
 if exist "%JAVA_EXE%" goto execute
 

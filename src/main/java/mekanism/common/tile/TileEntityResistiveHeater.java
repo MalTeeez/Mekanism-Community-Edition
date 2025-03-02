@@ -90,8 +90,8 @@ public class TileEntityResistiveHeater extends TileEntityNoisyElectricBlock impl
 			
 			if(MekanismUtils.canFunction(this))
 			{
-				toUse = Math.min(getEnergy(), energyUsage);
-				heatToAbsorb += toUse/general.energyPerHeat;
+				toUse = Math.min(getEnergy(), energyUsage*25.5);
+				heatToAbsorb += ((toUse*0.125)/general.energyPerHeat)*0.02;
 				setEnergy(getEnergy() - toUse);
 			}
 			
@@ -241,16 +241,11 @@ public class TileEntityResistiveHeater extends TileEntityNoisyElectricBlock impl
 	}
 
 	@Override
-	public double applyTemperatureChange()
+	public double applyTemperatureChange() 
 	{
-		if (heatToAbsorb < 0) { // Heat subtraction
-			double newTemperature = temperature + heatToAbsorb;
-			temperature = newTemperature >= 0.01 ? newTemperature : 0.0;
-		} else {
-			temperature += heatToAbsorb;
-		}
+		temperature += heatToAbsorb;
 		heatToAbsorb = 0;
-
+		
 		return temperature;
 	}
 

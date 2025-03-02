@@ -85,8 +85,9 @@ public class ThreadMinerSearch extends Thread
 				{
 					continue;
 				}
-	
-				if(info.block != null && !tileEntity.getWorldObj().isAirBlock(x, y, z) && info.block.getBlockHardness(tileEntity.getWorldObj(), x, y, z) >= 0)
+				
+				float hardness = info.block.getBlockHardness(tileEntity.getWorldObj(), x, y, z);
+				if(info.block != null && !tileEntity.getWorldObj().isAirBlock(x, y, z) && hardness >= 0 && hardness < 5)
 				{
 					MinerFilter filterFound = null;
 					boolean canFilter = false;
