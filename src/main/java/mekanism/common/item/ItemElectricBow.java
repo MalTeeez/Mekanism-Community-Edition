@@ -16,11 +16,14 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemElectricBow extends ItemEnergizedTiered
+public class ItemElectricBow extends ItemEnergized
 {
+
+	public final int ENERGY_PER_USE = (int) (MAX_ELECTRICITY/1000);
+
 	public ItemElectricBow()
 	{
-		super(Tier.EquipmentTier.ADVANCED);
+		super(Tier.EquipmentTier.ADVANCED.energy);
 		setFull3D();
 	}
 
