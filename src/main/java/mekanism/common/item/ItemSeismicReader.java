@@ -11,13 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
-public class ItemSeismicReader extends ItemEnergizedTiered
+public class ItemSeismicReader extends ItemEnergized
 {
-	public final int ENERGY_USAGE = EquipmentTier.energy/250;
+	public final double ENERGY_USAGE = MAX_ELECTRICITY/250;
 	
 	public ItemSeismicReader()
 	{
-		super(Tier.EquipmentTier.BASIC);
+		super(Tier.EquipmentTier.BASIC.energy);
 	}
 	
 	@Override
