@@ -1,0 +1,44 @@
+# Builds tagged commits and attaches the jars to a GitHub release (modeled after GTNH-Actions-Workflows release-tags.yml)
+
+name: Release tagged build
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ github.ref_name }}
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Set up JDKs
+        uses: actions/setup-java@v5
+        with:
+          java-version: |
+            8
+            17
+            21
+          distribution: 'zulu'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build
+        run: ./gradlew --stacktrace assemble
+      - name: Delete old release if it already exists
+        run: gh release delete --yes "$VERSION"
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release under current tag
+        run: gh release create "$VERSION" --generate-notes ${{ endsWith(github.ref_name, '-pre') && '--prerelease' || '' }} ./build/libs/*.jar
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
