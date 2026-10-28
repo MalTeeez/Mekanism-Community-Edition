@@ -23,6 +23,8 @@ public class SynchronizedBoilerData extends SynchronizedData<SynchronizedBoilerD
 	
 	public static double CASING_INSULATION_COEFFICIENT = 1;
 	public static double CASING_INVERSE_CONDUCTION_COEFFICIENT = 1;
+	public static double MODERN_INVERSE_INSULATION = 100000;
+	public static double MODERN_INVERSE_CONDUCTION = 1;
 	public static double BASE_BOIL_TEMP = 100-(TemperatureUnit.AMBIENT.zeroOffset-TemperatureUnit.CELSIUS.zeroOffset);
 	
 	public static double SODIUM_COOLING_EFFICIENCY = 0.4;
@@ -68,12 +70,20 @@ public class SynchronizedBoilerData extends SynchronizedData<SynchronizedBoilerD
 	 */
 	public static double getHeatEnthalpy()
 	{
-		return general.maxEnergyPerSteam/general.energyPerHeat;
+		return general.maxEnergyPerSteam/(general.steamEnergyEfficiency*general.energyPerHeat);
 	}
-	
+
+	/**
+	 * @return heat units needed to raise the whole boiler by one degree
+	 */
+	public double getHeatCapacity()
+	{
+		return locations.size()*general.boilerCasingHeatCapacity;
+	}
+
 	public double getHeatAvailable()
 	{
-		double heatAvailable = (temperature-BASE_BOIL_TEMP)*locations.size();
+		double heatAvailable = (temperature-BASE_BOIL_TEMP)*getHeatCapacity()*general.boilerWaterConductivity;
 		return Math.min(heatAvailable, superheatingElements*general.superheatingHeatTransfer);
 	}
 	
@@ -141,21 +151,32 @@ public class SynchronizedBoilerData extends SynchronizedData<SynchronizedBoilerD
 	@Override
 	public double[] simulateHeat()
 	{
-		double invConduction = IHeatTransfer.AIR_INVERSE_COEFFICIENT + (CASING_INSULATION_COEFFICIENT + CASING_INVERSE_CONDUCTION_COEFFICIENT)*locations.size();
-		double heatToTransfer = temperature / invConduction;
+		double heatToTransfer;
+		double temperatureLoss;
+
+		if(general.legacyHeatBalance)
+		{
+			heatToTransfer = temperatureLoss = temperature / (IHeatTransfer.AIR_INVERSE_COEFFICIENT + (CASING_INSULATION_COEFFICIENT + CASING_INVERSE_CONDUCTION_COEFFICIENT)*locations.size());
+		}
+		else {
+			//Upstream's casing insulation and conduction are fixed for the whole boiler instead of per casing block
+			temperatureLoss = temperature / (IHeatTransfer.AIR_INVERSE_COEFFICIENT + MODERN_INVERSE_INSULATION + MODERN_INVERSE_CONDUCTION);
+			heatToTransfer = temperatureLoss*getHeatCapacity();
+		}
+
 		transferHeatTo(-heatToTransfer);
-		
-		return new double[] {0, heatToTransfer};
+
+		return new double[] {0, temperatureLoss};
 	}
 
 	@Override
 	public double applyTemperatureChange()
 	{
 		if (heatToAbsorb < 0) { // Heat subtraction
-			double newTemperature = temperature + (heatToAbsorb / locations.size());
+			double newTemperature = temperature + (heatToAbsorb / getHeatCapacity());
 			temperature = newTemperature >= 0.01 ? newTemperature : 0.0;
 		} else {
-			temperature += heatToAbsorb / locations.size();
+			temperature += heatToAbsorb / getHeatCapacity();
 		}
 		heatToAbsorb = 0;
 

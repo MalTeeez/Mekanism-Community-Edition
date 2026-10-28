@@ -75,8 +75,15 @@ public class MekanismConfig
 		public static double evaporationSolarMultiplier = 0.2;
 		public static double evaporationMaxTemp = 3000;
 		public static double energyPerHeat = 1000;
+		public static boolean legacyHeatBalance;
+		//Effective turbine/boiler values, picked from the legacy or modern config when the config loads
 		public static double maxEnergyPerSteam = 100;
 		public static double superheatingHeatTransfer = 10000;
+		public static double steamEnergyEfficiency = 1;
+		public static double boilerWaterConductivity = 1;
+		public static double boilerCasingHeatCapacity = 1;
+		public static int boilerHeatedCoolantPerTank = 256000;
+		public static int boilerCooledCoolantPerTank = 256000;
 		public static double heatPerFuelTick = 4;
 		public static boolean allowTransmitterAlloyUpgrade;
 		public static boolean allowProtection = true;

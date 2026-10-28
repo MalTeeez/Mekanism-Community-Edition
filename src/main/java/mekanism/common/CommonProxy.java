@@ -314,8 +314,20 @@ public class CommonProxy implements IGuiProvider
 		general.evaporationSolarMultiplier = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EvaporationSolarMultiplier", 0.2D).getDouble();
 		general.evaporationMaxTemp = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EvaporationMaxTemp", 3000D).getDouble();
 		general.energyPerHeat = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EnergyPerHeat", 1000D).getDouble();
-		general.maxEnergyPerSteam = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "MaxEnergyPerSteam", 100D).getDouble();
-		general.superheatingHeatTransfer = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "SuperheatingHeatTransfer", 10000D).getDouble();
+		general.legacyHeatBalance = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "LegacyHeatBalance", false, "Uses the old Mekanism 9 turbine/boiler numbers (the General MaxEnergyPerSteam/SuperheatingHeatTransfer and the Generation Turbine* keys) instead of Mekanism 10+ numbers (the heat and turbine categories)").getBoolean();
+		double legacyMaxEnergyPerSteam = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "MaxEnergyPerSteam", 100D, "Used when LegacyHeatBalance is true").getDouble();
+		double legacySuperheatingHeatTransfer = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "SuperheatingHeatTransfer", 10000D, "Heat units (EnergyPerHeat Joules each) per element. Used when LegacyHeatBalance is true").getDouble();
+		double modernMaxEnergyPerSteam = Mekanism.configuration.get("heat", "MaxEnergyPerSteam", 10D, "Maximum Joules per mB of Steam. Also affects Thermoelectric Boiler. Used when LegacyHeatBalance is false").getDouble();
+		double modernSuperheatingHeatTransfer = Mekanism.configuration.get("heat", "SuperheatingHeatTransfer", 16000000D, "Amount of heat (Joules) each Boiler heating element produces. Used when LegacyHeatBalance is false").getDouble();
+		double modernBoilerWaterConductivity = Mekanism.configuration.get("heat", "BoilerWaterConductivity", 0.7D, "How much Boiler heat is immediately usable to convert water to steam. Used when LegacyHeatBalance is false").getDouble();
+		//Modern uses upstream's fixed 0.2 steam efficiency and 50 J/K casing heat capacity, converted to heat units
+		general.maxEnergyPerSteam = general.legacyHeatBalance ? legacyMaxEnergyPerSteam : modernMaxEnergyPerSteam;
+		general.superheatingHeatTransfer = general.legacyHeatBalance ? legacySuperheatingHeatTransfer : modernSuperheatingHeatTransfer/general.energyPerHeat;
+		general.steamEnergyEfficiency = general.legacyHeatBalance ? 1 : 0.2;
+		general.boilerWaterConductivity = general.legacyHeatBalance ? 1 : modernBoilerWaterConductivity;
+		general.boilerCasingHeatCapacity = general.legacyHeatBalance ? 1 : 50/general.energyPerHeat;
+		general.boilerHeatedCoolantPerTank = Mekanism.configuration.get("heat", "BoilerHeatedCoolantPerTank", 256000, "Amount of heated coolant (mB) that each block of the boiler's steam portion contributes to the volume", 1, 1000000).getInt();
+		general.boilerCooledCoolantPerTank = Mekanism.configuration.get("heat", "BoilerCooledCoolantPerTank", 256000, "Amount of cooled coolant (mB) that each block of the boiler's steam portion contributes to the volume", 1, 1000000).getInt();
 		general.heatPerFuelTick = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "HeatPerFuelTick", 4D).getDouble();
 		general.allowTransmitterAlloyUpgrade = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "AllowTransmitterAlloyUpgrade", true).getBoolean();
 		general.allowProtection = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "AllowProtection", true).getBoolean();

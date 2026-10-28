@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import mekanism.api.Coord4D;
+import mekanism.api.MekanismConfig.general;
 import mekanism.common.Mekanism;
 import mekanism.common.block.BlockBasic.BasicType;
 import mekanism.common.content.tank.SynchronizedTankData.ValveData;
@@ -22,6 +23,16 @@ public class BoilerUpdateProtocol extends UpdateProtocol<SynchronizedBoilerData>
 {
 	public static final int WATER_PER_TANK = 16000;
 	public static final int STEAM_PER_TANK = 160000;
+
+	public static int getHeatedCoolantCapacity(int steamVolume)
+	{
+		return (int)Math.min((long)steamVolume*general.boilerHeatedCoolantPerTank, Integer.MAX_VALUE);
+	}
+
+	public static int getCooledCoolantCapacity(int steamVolume)
+	{
+		return (int)Math.min((long)steamVolume*general.boilerCooledCoolantPerTank, Integer.MAX_VALUE);
+	}
 
 	public BoilerUpdateProtocol(TileEntityBoilerCasing tileEntity)
 	{
@@ -255,8 +266,8 @@ public class BoilerUpdateProtocol extends UpdateProtocol<SynchronizedBoilerData>
 			(structureFound).steamStored.amount = Math.min((structureFound).steamStored.amount, structureFound.steamVolume*STEAM_PER_TANK);
 		}
 		
-		structureFound.superheatedSodiumTank.setMaxGas(structureFound.steamVolume*STEAM_PER_TANK);
-		structureFound.cooledSodiumTank.setMaxGas(structureFound.steamVolume*STEAM_PER_TANK);
+		structureFound.superheatedSodiumTank.setMaxGas(getHeatedCoolantCapacity(structureFound.steamVolume));
+		structureFound.cooledSodiumTank.setMaxGas(getCooledCoolantCapacity(structureFound.steamVolume));
 		structureFound.superheatedSodiumTank.setGas(structureFound.superheatedSodiumTank.stored);
 		structureFound.cooledSodiumTank.setGas(structureFound.cooledSodiumTank.stored);
 	}

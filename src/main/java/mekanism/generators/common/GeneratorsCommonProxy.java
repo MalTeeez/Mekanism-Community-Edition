@@ -1,5 +1,6 @@
 package mekanism.generators.common;
 
+import mekanism.api.MekanismConfig.general;
 import mekanism.api.MekanismConfig.generators;
 import mekanism.api.MekanismConfig.mekce_generators;
 import mekanism.api.MekanismConfig.generatorsrecipes;
@@ -124,9 +125,15 @@ public class GeneratorsCommonProxy implements IGuiProvider
 		loadWindConfiguration();
 		loadwinddimension();
 		generators.turbineBladesPerCoil = Mekanism.configurationgenerators.get("generation", "TurbineBladesPerCoil", 4).getInt();
-		generators.turbineVentGasFlow = Mekanism.configurationgenerators.get("generation", "TurbineVentGasFlow", 16000D).getDouble();
-		generators.turbineDisperserGasFlow = Mekanism.configurationgenerators.get("generation", "TurbineDisperserGasFlow", 640D).getDouble();
-		generators.condenserRate = Mekanism.configurationgenerators.get("generation", "TurbineCondenserFlowRate", 32000).getInt();
+		double legacyVentGasFlow = Mekanism.configurationgenerators.get("generation", "TurbineVentGasFlow", 16000D, "Used when LegacyHeatBalance is true").getDouble();
+		double legacyDisperserGasFlow = Mekanism.configurationgenerators.get("generation", "TurbineDisperserGasFlow", 640D, "Used when LegacyHeatBalance is true").getDouble();
+		int legacyCondenserRate = Mekanism.configurationgenerators.get("generation", "TurbineCondenserFlowRate", 32000, "Used when LegacyHeatBalance is true").getInt();
+		double modernVentGasFlow = Mekanism.configurationgenerators.get("turbine", "TurbineVentGasFlow", 32000D, "The rate at which steam is vented into the turbine. Used when LegacyHeatBalance is false").getDouble();
+		double modernDisperserGasFlow = Mekanism.configurationgenerators.get("turbine", "TurbineDisperserGasFlow", 1280D, "The rate at which steam is dispersed into the turbine. Used when LegacyHeatBalance is false").getDouble();
+		int modernCondenserRate = Mekanism.configurationgenerators.get("turbine", "TurbineCondenserFlowRate", 64000, "The rate at which steam is condensed in the turbine. Used when LegacyHeatBalance is false").getInt();
+		generators.turbineVentGasFlow = general.legacyHeatBalance ? legacyVentGasFlow : modernVentGasFlow;
+		generators.turbineDisperserGasFlow = general.legacyHeatBalance ? legacyDisperserGasFlow : modernDisperserGasFlow;
+		generators.condenserRate = general.legacyHeatBalance ? legacyCondenserRate : modernCondenserRate;
 		generators.fissionEnergyPerFuel = Mekanism.configurationgenerators.get("generation", "FissionEnergyPerFuel", 1000000D, "Amount of heat created from each whole mB of fission fuel burned").getDouble();
 		generators.fissionCasingHeatCapacity = Mekanism.configurationgenerators.get("generation", "FissionCasingHeatCapacity", 1000D, "Heat capacity added to a fission reactor by each casing block").getDouble();
 		generators.fissionSurfaceAreaTarget = Mekanism.configurationgenerators.get("generation", "FissionSurfaceAreaTarget", 4D, "Average fuel assembly surface area needed for 100% boil efficiency").getDouble();

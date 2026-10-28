@@ -138,7 +138,7 @@ public class TileEntityBoilerCasing extends TileEntityMultiblock<SynchronizedBoi
 						{
 							structure.superheatedSodiumTank.draw(toCool, true);
 							structure.cooledSodiumTank.receive(new GasStack(GasRegistry.getGas("sodium"), toCool), true);
-							structure.temperature += toCool*SynchronizedBoilerData.SODIUM_STEAM_PER_MB*SynchronizedBoilerData.getHeatEnthalpy()/structure.locations.size();
+							structure.temperature += toCool*SynchronizedBoilerData.SODIUM_STEAM_PER_MB*SynchronizedBoilerData.getHeatEnthalpy()/structure.getHeatCapacity();
 						}
 					}
 					
@@ -161,7 +161,7 @@ public class TileEntityBoilerCasing extends TileEntityMultiblock<SynchronizedBoi
 							structure.steamStored.amount += amountToBoil;
 						}
 						
-						structure.temperature -= (amountToBoil*SynchronizedBoilerData.getHeatEnthalpy())/structure.locations.size();
+						structure.temperature -= (amountToBoil*SynchronizedBoilerData.getHeatEnthalpy())/structure.getHeatCapacity();
 						structure.lastBoilRate = amountToBoil;
 					}
 					else {
@@ -321,8 +321,8 @@ public class TileEntityBoilerCasing extends TileEntityMultiblock<SynchronizedBoi
 					structure.steamStored = null;
 				}
 				
-				structure.superheatedSodiumTank.setMaxGas(clientSteamCapacity);
-				structure.cooledSodiumTank.setMaxGas(clientSteamCapacity);
+				structure.superheatedSodiumTank.setMaxGas(BoilerUpdateProtocol.getHeatedCoolantCapacity(clientSteamCapacity/BoilerUpdateProtocol.STEAM_PER_TANK));
+				structure.cooledSodiumTank.setMaxGas(BoilerUpdateProtocol.getCooledCoolantCapacity(clientSteamCapacity/BoilerUpdateProtocol.STEAM_PER_TANK));
 				structure.superheatedSodiumTank.stored = readGas(dataStream);
 				structure.cooledSodiumTank.stored = readGas(dataStream);
 				
