@@ -67,8 +67,8 @@ public class MekanismBlocks
 		GameRegistry.registerBlock(MachineBlock2, ItemBlockMachine.class, "MachineBlock2");
 		GameRegistry.registerBlock(MachineBlock3, ItemBlockMachine.class, "MachineBlock3");
 
-		//GTNHLib only models blocks whose registry name matches the lowercase asset domain of their blockstate
-		GameRegistry.registerBlock(MachineBlock4, ItemBlockMachine.class, "MachineBlock4", "mekanism");
+		//JSON model via GTNHLib, see MixedCaseDomainPack
+		GameRegistry.registerBlock(MachineBlock4, ItemBlockMachine.class, "MachineBlock4");
 		BlockPropertyRegistry.registerBlockItemProperty(MachineBlock4, IntegerBlockProperty.meta("type"));
 		BlockPropertyRegistry.registerBlockItemProperty(MachineBlock4, new MachineFacingProperty(), ForgeDirection.NORTH);
 

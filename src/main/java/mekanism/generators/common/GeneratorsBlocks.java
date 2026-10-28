@@ -24,8 +24,8 @@ public class GeneratorsBlocks
 		GameRegistry.registerBlock(Reactor, ItemBlockReactor.class, "Reactor");
 		GameRegistry.registerBlock(ReactorGlass, ItemBlockReactor.class, "ReactorGlass");
 
-		//GTNHLib only models blocks whose registry name matches the lowercase asset domain of their blockstate
-		GameRegistry.registerBlock(FissionAssembly, ItemBlockReactor.class, "FissionAssembly", "mekanismgenerators");
+		//JSON model via GTNHLib, see MixedCaseDomainPack
+		GameRegistry.registerBlock(FissionAssembly, ItemBlockReactor.class, "FissionAssembly");
 		BlockPropertyRegistry.registerBlockItemProperty(FissionAssembly, IntegerBlockProperty.meta("type"));
 	}
 }

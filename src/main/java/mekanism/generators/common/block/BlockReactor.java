@@ -5,6 +5,7 @@ import java.util.List;
 
 import mekanism.api.Coord4D;
 import mekanism.common.CTMData;
+import com.gtnewhorizon.gtnhlib.api.BlockModelInfo;
 import mekanism.common.Mekanism;
 import mekanism.common.base.IBlockCTM;
 import mekanism.common.tile.TileEntityBasicBlock;
@@ -46,8 +47,18 @@ import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockReactor extends BlockContainer implements IBlockCTM
+public class BlockReactor extends BlockContainer implements IBlockCTM, BlockModelInfo
 {
+	//GTNHLib's model scan is keyed by lowercase asset folders, our registry names by the mixed-case mod id, so claim the model
+	@Override
+	public boolean nhlib$isModeled()
+	{
+		return this == GeneratorsBlocks.FissionAssembly;
+	}
+
+	@Override
+	public void nhlib$setModeled(boolean modeled) {}
+
 	public IIcon[][] icons = new IIcon[16][16];
 
 	public CTMData[][] ctms = new CTMData[16][3];

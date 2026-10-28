@@ -18,6 +18,7 @@ import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.MekanismRenderer.DefIcon;
 import mekanism.client.render.MekanismRenderer.ICustomBlockIcon;
 import mekanism.common.CTMData;
+import com.gtnewhorizon.gtnhlib.api.BlockModelInfo;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismBlocks;
 import mekanism.common.Tier.BaseTier;
@@ -162,8 +163,18 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author AidanBrady
  *
  */
-public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlockCTM, ICustomBlockIcon
+public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlockCTM, ICustomBlockIcon, BlockModelInfo
 {
+	//GTNHLib's model scan is keyed by lowercase asset folders, our registry names by the mixed-case mod id, so claim the model
+	@Override
+	public boolean nhlib$isModeled()
+	{
+		return this == MekanismBlocks.MachineBlock4;
+	}
+
+	@Override
+	public void nhlib$setModeled(boolean modeled) {}
+
 	public IIcon[][] icons = new IIcon[16][16];
 	public IIcon[][][] factoryIcons = new IIcon[4][16][16];
 	

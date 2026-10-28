@@ -19,6 +19,7 @@ import mekanism.client.SparkleAnimation.INodeChecker;
 import mekanism.client.entity.EntityLaser;
 import mekanism.client.gui.*;
 import mekanism.client.render.MekanismRenderer;
+import mekanism.client.render.MixedCaseDomainPack;
 import mekanism.client.render.RenderGlowPanel;
 import mekanism.client.render.RenderPartTransmitter;
 import mekanism.client.render.RenderTickHandler;
@@ -199,6 +200,7 @@ public class ClientProxy extends CommonProxy
 	{
 		//JSON models (machines)
 		ModelRegistry.registerModid("Mekanism");
+		MixedCaseDomainPack.register();
 
 		RenderPartTransmitter.init();
 		RenderGlowPanel.init();
