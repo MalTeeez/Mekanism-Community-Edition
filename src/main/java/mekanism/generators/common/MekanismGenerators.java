@@ -20,6 +20,7 @@ import mekanism.common.network.PacketSimpleGui;
 import mekanism.common.recipe.RecipeHandler;
 import mekanism.common.recipe.ShapedMekanismRecipe;
 import mekanism.common.util.MekanismUtils;
+import mekanism.generators.common.content.fission.FissionMeltdown;
 import mekanism.generators.common.content.fission.SynchronizedFissionData;
 import mekanism.generators.common.content.turbine.SynchronizedTurbineData;
 import net.minecraft.init.Blocks;
@@ -41,6 +42,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
 @Mod(modid = "MekanismGenerators", name = "MekanismGenerators", version = "GRADLE_MODVERSION", dependencies = "required-after:Mekanism", guiFactory = "mekanism.generators.client.gui.GeneratorsGuiFactory")
@@ -422,6 +425,15 @@ public class MekanismGenerators implements IModule
 	public void resetClient()
 	{
 		SynchronizedTurbineData.clientRotationMap.clear();
+	}
+
+	@SubscribeEvent
+	public void onServerTick(ServerTickEvent event)
+	{
+		if(event.phase == Phase.END)
+		{
+			FissionMeltdown.tickAll();
+		}
 	}
 
 	@SubscribeEvent

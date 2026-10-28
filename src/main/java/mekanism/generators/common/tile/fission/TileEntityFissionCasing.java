@@ -26,6 +26,7 @@ import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.generators.common.MekanismGenerators;
 import mekanism.generators.common.content.fission.FissionCache;
+import mekanism.generators.common.content.fission.FissionMeltdown;
 import mekanism.generators.common.content.fission.FissionUpdateProtocol;
 import mekanism.generators.common.content.fission.SynchronizedFissionData;
 import net.minecraft.client.audio.ISound.AttenuationType;
@@ -294,6 +295,8 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 			contamination = (fuel+waste)*generators.fissionMeltdownRadiationMultiplier;
 		}
 
+		double heat = structure.temperature*structure.heatCapacity;
+
 		//Reset first; the explosions may tear the structure down
 		structure.active = false;
 		structure.damage = generators.fissionPostMeltdownDamage;
@@ -310,8 +313,7 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 			RadiationHooks.scheduleMeltdown(worldObj, AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX+1, maxY+1, maxZ+1), generators.fissionMeltdownRadius, contamination, 100);
 		}
 		else {
-			//ponytail: one explosion without u25core; its scheduled meltdown is the full version
-			worldObj.createExplosion(null, (minX+maxX)/2D+0.5, (minY+maxY)/2D+0.5, (minZ+maxZ)/2D+0.5, generators.fissionMeltdownRadius, true);
+			FissionMeltdown.schedule(new FissionMeltdown(worldObj, minX, minY, minZ, maxX, maxY, maxZ, heat, generators.fissionMeltdownRadius));
 		}
 	}
 

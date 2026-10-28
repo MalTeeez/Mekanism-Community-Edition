@@ -11,6 +11,7 @@ public class SynchronizedFissionData extends SynchronizedData<SynchronizedFissio
 	public static final double MIN_DAMAGE_TEMPERATURE = 1200;
 	public static final double MAX_DAMAGE_TEMPERATURE = 1800;
 	public static final double MAX_DAMAGE = 100;
+	public static final double EXPLOSION_CHANCE = 1D/512000;
 
 	public static final double INVERSE_INSULATION_COEFFICIENT = 10000;
 	public static final double INVERSE_CONDUCTION_COEFFICIENT = 10;
