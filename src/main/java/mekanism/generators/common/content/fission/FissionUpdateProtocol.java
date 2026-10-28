@@ -210,7 +210,9 @@ public class FissionUpdateProtocol extends UpdateProtocol<SynchronizedFissionDat
 
 		c.temperature = Math.max(c.temperature, m.temperature);
 		c.damage = Math.max(c.damage, m.damage);
-		c.active = c.active && m.active;
+		//c starts as a fresh cache, so OR keeps a running reactor running across reforms
+		c.active = c.active || m.active;
+		c.rateLimit = m.rateLimit;
 		c.forceDisable = c.forceDisable || m.forceDisable;
 		c.burnRemaining += m.burnRemaining;
 		c.partialWaste += m.partialWaste;
