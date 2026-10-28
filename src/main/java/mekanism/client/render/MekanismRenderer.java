@@ -675,7 +675,12 @@ public class MekanismRenderer
 	        tessellator.setNormal(1.0F, 0.0F, 0.0F);
 	        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, block.getIcon(5, metadata));
 	        tessellator.draw();
-        } catch(Exception e) {}
+        } catch(Exception e) {
+        	//A failed face leaves the tessellator mid-draw, which crashes the next render call
+        	try {
+        		Tessellator.instance.draw();
+        	} catch(IllegalStateException notDrawing) {}
+        }
         
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 	}
