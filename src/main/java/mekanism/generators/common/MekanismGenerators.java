@@ -20,6 +20,7 @@ import mekanism.common.network.PacketSimpleGui;
 import mekanism.common.recipe.RecipeHandler;
 import mekanism.common.recipe.ShapedMekanismRecipe;
 import mekanism.common.util.MekanismUtils;
+import mekanism.generators.common.content.fission.SynchronizedFissionData;
 import mekanism.generators.common.content.turbine.SynchronizedTurbineData;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -59,6 +60,7 @@ public class MekanismGenerators implements IModule
     );
 
 	public static MultiblockManager<SynchronizedTurbineData> turbineManager = new MultiblockManager<SynchronizedTurbineData>("industrialTurbine");
+	public static MultiblockManager<SynchronizedFissionData> fissionManager = new MultiblockManager<SynchronizedFissionData>("fissionReactor");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -246,6 +248,28 @@ public class MekanismGenerators implements IModule
 			}));
 		}
 
+		//Fission Reactor Recipes
+
+		CraftingManager.getInstance().getRecipeList().add(new ShapedMekanismRecipe(new ItemStack(GeneratorsBlocks.Reactor, 4, 5), new Object[]{
+				" I ", "ICI", " I ", Character.valueOf('I'), "ingotLead", Character.valueOf('C'), new ItemStack(MekanismBlocks.BasicBlock, 1, 8)
+		}));
+
+		CraftingManager.getInstance().getRecipeList().add(new ShapedMekanismRecipe(new ItemStack(GeneratorsBlocks.Reactor, 2, 6), new Object[]{
+				" F ", "FCF", " F ", Character.valueOf('F'), new ItemStack(GeneratorsBlocks.Reactor, 1, 5), Character.valueOf('C'), MekanismUtils.getControlCircuit(BaseTier.ELITE)
+		}));
+
+		CraftingManager.getInstance().getRecipeList().add(new ShapedMekanismRecipe(new ItemStack(GeneratorsBlocks.FissionAssembly, 1, 0), new Object[]{
+				"ISI", "ITI", "ISI", Character.valueOf('I'), "ingotLead", Character.valueOf('S'), "ingotSteel", Character.valueOf('T'), MekanismUtils.getEmptyGasTank(GasTankTier.BASIC)
+		}));
+
+		CraftingManager.getInstance().getRecipeList().add(new ShapedMekanismRecipe(new ItemStack(GeneratorsBlocks.FissionAssembly, 1, 1), new Object[]{
+				"ICI", "SIS", "SIS", Character.valueOf('I'), "ingotLead", Character.valueOf('S'), "ingotSteel", Character.valueOf('C'), MekanismUtils.getControlCircuit(BaseTier.ELITE)
+		}));
+
+		CraftingManager.getInstance().getRecipeList().add(new ShapedMekanismRecipe(new ItemStack(GeneratorsBlocks.Reactor, 1, 9), new Object[]{
+				" R ", "RFR", " R ", Character.valueOf('R'), "dustRedstone", Character.valueOf('F'), new ItemStack(GeneratorsBlocks.Reactor, 1, 5)
+		}));
+
 		FuelHandler.addGas(GasRegistry.getGas("ethene"), general.ETHENE_BURN_TIME, general.FROM_H2 + generators.bioGeneration * 2 * general.ETHENE_BURN_TIME); //1mB hydrogen + 2*bioFuel/tick*200ticks/100mB * 20x efficiency bonus
 		FuelHandler.addGas(GasRegistry.getGas("methane"), general.METHANE_BURN_TIME, general.FROM_H2 + generators.bioGeneration * general.METHANE_BURN_TIME);
 	}
@@ -287,6 +311,15 @@ public class MekanismGenerators implements IModule
 		dataStream.writeDouble(generators.turbineVentGasFlow);
 		dataStream.writeDouble(generators.turbineDisperserGasFlow);
 		dataStream.writeInt(generators.condenserRate);
+		dataStream.writeDouble(generators.fissionEnergyPerFuel);
+		dataStream.writeDouble(generators.fissionCasingHeatCapacity);
+		dataStream.writeDouble(generators.fissionSurfaceAreaTarget);
+		dataStream.writeBoolean(generators.fissionMeltdownsEnabled);
+		dataStream.writeFloat(generators.fissionMeltdownRadius);
+		dataStream.writeDouble(generators.fissionMeltdownChance);
+		dataStream.writeDouble(generators.fissionPostMeltdownDamage);
+		dataStream.writeDouble(generators.fissionDefaultBurnRate);
+		dataStream.writeInt(generators.fissionBurnPerAssembly);
 		dataStream.writeBoolean(mekce_generators.enableWindmillWhitelist);
 		dataStream.writeDouble(mekce_generators.laserHeatCoefficient);
 		dataStream.writeDouble(mekce_generators.fusionThermocoupleEfficiency);
@@ -340,6 +373,15 @@ public class MekanismGenerators implements IModule
 		generators.turbineVentGasFlow = dataStream.readDouble();
 		generators.turbineDisperserGasFlow = dataStream.readDouble();
 		generators.condenserRate = dataStream.readInt();
+		generators.fissionEnergyPerFuel = dataStream.readDouble();
+		generators.fissionCasingHeatCapacity = dataStream.readDouble();
+		generators.fissionSurfaceAreaTarget = dataStream.readDouble();
+		generators.fissionMeltdownsEnabled = dataStream.readBoolean();
+		generators.fissionMeltdownRadius = dataStream.readFloat();
+		generators.fissionMeltdownChance = dataStream.readDouble();
+		generators.fissionPostMeltdownDamage = dataStream.readDouble();
+		generators.fissionDefaultBurnRate = dataStream.readDouble();
+		generators.fissionBurnPerAssembly = dataStream.readInt();
 		mekce_generators.enableWindmillWhitelist = dataStream.readBoolean();
 		mekce_generators.laserHeatCoefficient = dataStream.readDouble();
 		mekce_generators.fusionThermocoupleEfficiency = dataStream.readDouble();

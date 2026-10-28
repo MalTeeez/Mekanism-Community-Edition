@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"type=0": {"model": "mekanism:blocks/fission/fuel_assembly"},
+		"type=1": {"model": "mekanism:blocks/fission/control_rod_assembly"}
+	}
+}

@@ -47,6 +47,7 @@
 	"tile.christmas.5": {"category": "block", "sounds": [{"name": "holiday/Nutcracker5", "stream": false}]},
 
 	"tile.gen.bio": {"category": "block", "sounds": [{"name": "BioGenerator", "stream": false}]},
+	"tile.fission": {"category": "block", "sounds": [{"name": "fission_reactor", "stream": false}]},
 	"tile.gen.gas": {"category": "block", "sounds": [{"name": "GasGenerator", "stream": false}]},
 	"tile.gen.heat": {"category": "block", "sounds": [{"name": "HeatGenerator", "stream": false}]},
 	"tile.gen.solar": {"category": "block", "sounds": [{"name": "SolarGenerator", "stream": false}]},

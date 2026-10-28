@@ -8,11 +8,17 @@ import mekanism.common.CTMData;
 import mekanism.common.Mekanism;
 import mekanism.common.base.IBlockCTM;
 import mekanism.common.tile.TileEntityBasicBlock;
+import mekanism.common.multiblock.IMultiblock;
 import mekanism.common.tile.TileEntityElectricBlock;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.generators.common.GeneratorsBlocks;
 import mekanism.generators.common.MekanismGenerators;
+import mekanism.generators.common.tile.fission.TileEntityControlRodAssembly;
+import mekanism.generators.common.tile.fission.TileEntityFissionCasing;
+import mekanism.generators.common.tile.fission.TileEntityFissionFuelAssembly;
+import mekanism.generators.common.tile.fission.TileEntityFissionLogicAdapter;
+import mekanism.generators.common.tile.fission.TileEntityFissionPort;
 import mekanism.generators.common.tile.reactor.TileEntityReactorController;
 import mekanism.generators.common.tile.reactor.TileEntityReactorFrame;
 import mekanism.generators.common.tile.reactor.TileEntityReactorGlass;
@@ -25,6 +31,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -42,7 +49,7 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 {
 	public IIcon[][] icons = new IIcon[16][16];
 
-	public CTMData[][] ctms = new CTMData[16][2];
+	public CTMData[][] ctms = new CTMData[16][3];
 
 	public BlockReactor()
 	{
@@ -65,6 +72,11 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 			ctms[3][0] = new CTMData("ctm/ReactorPortInput", this, Arrays.asList(0, 1, 2, 3, 4)).registerIcons(register);
 			ctms[3][1] = new CTMData("ctm/ReactorPortOutput", this, Arrays.asList(0, 1, 2, 3, 4)).registerIcons(register);
 			ctms[4][0] = new CTMData("ctm/ReactorLogicAdapter", this, Arrays.asList(0, 1, 2, 3, 4)).registerIcons(register);
+			ctms[5][0] = new CTMData("ctm/FissionCasing", this, Arrays.asList(5, 6, 9)).registerIcons(register);
+			ctms[6][0] = new CTMData("ctm/FissionPortInput", this, Arrays.asList(5, 6, 9)).registerIcons(register);
+			ctms[6][1] = new CTMData("ctm/FissionPortOutputWaste", this, Arrays.asList(5, 6, 9)).registerIcons(register);
+			ctms[6][2] = new CTMData("ctm/FissionPortOutputCoolant", this, Arrays.asList(5, 6, 9)).registerIcons(register);
+			ctms[9][0] = new CTMData("ctm/FissionLogicAdapter", this, Arrays.asList(5, 6, 9)).registerIcons(register);
 
 			icons[0][0] = ctms[0][0].sideOverrides[1].icon;
 			icons[0][1] = ctms[0][1].sideOverrides[1].icon;
@@ -74,6 +86,18 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 			icons[3][0] = ctms[3][0].mainTextureData.icon;
 			icons[3][1] = ctms[3][1].mainTextureData.icon;
 			icons[4][0] = ctms[4][0].mainTextureData.icon;
+
+			for(int i : new int[] {5, 6, 9})
+			{
+				icons[i][0] = ctms[i][0].mainTextureData.icon;
+			}
+
+			icons[6][1] = ctms[6][1].mainTextureData.icon;
+			icons[6][2] = ctms[6][2].mainTextureData.icon;
+		}
+		else if(this == GeneratorsBlocks.FissionAssembly)
+		{
+			//Rendered through GTNHLib JSON models
 		}
 		else if(this == GeneratorsBlocks.ReactorGlass)
 		{
@@ -130,6 +154,11 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 				TileEntityReactorPort tileEntity = (TileEntityReactorPort)world.getTileEntity(x, y, z);
 				return icons[metadata][tileEntity.fluidEject ? 1 : 0];
 			}
+			else if(metadata == 6)
+			{
+				TileEntity tile = world.getTileEntity(x, y, z);
+				return icons[metadata][tile instanceof TileEntityFissionPort ? ((TileEntityFissionPort)tile).mode.ordinal() : 0];
+			}
 			else {
 				return icons[metadata][0];
 			}
@@ -155,10 +184,26 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 		{
 			TileEntity tileEntity = world.getTileEntity(x, y, z);
 
+			if(tileEntity instanceof IMultiblock)
+			{
+				((IMultiblock)tileEntity).update();
+			}
+
 			if(tileEntity instanceof TileEntityBasicBlock)
 			{
 				((TileEntityBasicBlock)tileEntity).onNeighborChange(block);
 			}
+		}
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
+	{
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+
+		if(!world.isRemote && tileEntity instanceof IMultiblock)
+		{
+			((IMultiblock)tileEntity).update();
 		}
 	}
 
@@ -170,7 +215,7 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 			return true;
 		}
 
-		TileEntityElectricBlock tileEntity = (TileEntityElectricBlock)world.getTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		int metadata = world.getBlockMetadata(x, y, z);
 
 		if(entityplayer.getCurrentEquippedItem() != null)
@@ -185,9 +230,15 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 
 				((IToolWrench)entityplayer.getCurrentEquippedItem().getItem()).wrenchUsed(entityplayer, x, y, z);
 
+				if(!(tileEntity instanceof TileEntityBasicBlock))
+				{
+					return true;
+				}
+
+				TileEntityBasicBlock basicTile = (TileEntityBasicBlock)tileEntity;
 				int change = 0;
 
-				switch(tileEntity.facing)
+				switch(basicTile.facing)
 				{
 					case 3:
 						change = 5;
@@ -203,10 +254,15 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 						break;
 				}
 
-				tileEntity.setFacing((short)change);
+				basicTile.setFacing((short)change);
 				world.notifyBlocksOfNeighborChange(x, y, z, this);
 				return true;
 			}
+		}
+
+		if(tileEntity instanceof TileEntityFissionCasing)
+		{
+			return ((IMultiblock)tileEntity).onActivate(entityplayer);
 		}
 
 		if(tileEntity instanceof TileEntityReactorController)
@@ -265,7 +321,7 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 	@Override
 	public int getRenderBlockPass()
 	{
-		return this == GeneratorsBlocks.Reactor ? 0 : 1;
+		return this == GeneratorsBlocks.ReactorGlass ? 1 : 0;
 	}
 
 	@Override
@@ -304,12 +360,18 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 	@Override
 	public CTMData getCTMData(IBlockAccess world, int x, int y, int z, int meta)
 	{
+		TileEntity tile = world.getTileEntity(x, y, z);
+
+		if(tile instanceof TileEntityFissionPort)
+		{
+			return ctms[meta][((TileEntityFissionPort)tile).mode.ordinal()];
+		}
+
 		if(ctms[meta][1] != null && MekanismUtils.isActive(world, x, y, z))
 		{
 			return ctms[meta][1];
 		}
 		
-		TileEntity tile = world.getTileEntity(x, y, z);
 		
 		if(tile instanceof TileEntityReactorPort)
 		{
@@ -359,6 +421,11 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 			return ((TileEntityReactorLogicAdapter)tile).checkMode() ? 15 : 0;
 		}
 		
+		if(tile instanceof TileEntityFissionLogicAdapter)
+		{
+			return ((TileEntityFissionLogicAdapter)tile).checkMode() ? 15 : 0;
+		}
+		
         return 0;
     }
 	
@@ -372,6 +439,9 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 			case FRAME:
 			case PORT:
 			case ADAPTER:
+			case FISSION_CASING:
+			case FISSION_PORT:
+			case FISSION_LOGIC_ADAPTER:
 				return true;
 			default:
 				return false;
@@ -386,6 +456,7 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 		switch(type)
 		{
 			case ADAPTER:
+			case FISSION_LOGIC_ADAPTER:
 				return true;
 			default:
 				return false;
@@ -399,6 +470,11 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 		NEUTRON_CAPTURE(GeneratorsBlocks.Reactor, 2, "ReactorNeutronCapturePlate", 14, TileEntityReactorNeutronCapture.class),
 		PORT(GeneratorsBlocks.Reactor, 3, "ReactorPort", -1, TileEntityReactorPort.class),
 		ADAPTER(GeneratorsBlocks.Reactor, 4, "ReactorLogicAdapter", 15, TileEntityReactorLogicAdapter.class),
+		FISSION_CASING(GeneratorsBlocks.Reactor, 5, "FissionCasing", -1, TileEntityFissionCasing.class),
+		FISSION_PORT(GeneratorsBlocks.Reactor, 6, "FissionPort", -1, TileEntityFissionPort.class),
+		FISSION_FUEL_ASSEMBLY(GeneratorsBlocks.FissionAssembly, 0, "FissionFuelAssembly", -1, TileEntityFissionFuelAssembly.class),
+		CONTROL_ROD_ASSEMBLY(GeneratorsBlocks.FissionAssembly, 1, "ControlRodAssembly", -1, TileEntityControlRodAssembly.class),
+		FISSION_LOGIC_ADAPTER(GeneratorsBlocks.Reactor, 9, "FissionLogicAdapter", 16, TileEntityFissionLogicAdapter.class),
 		GLASS(GeneratorsBlocks.ReactorGlass, 0, "ReactorGlass", -1, TileEntityReactorGlass.class),
 		LASER_FOCUS_MATRIX(GeneratorsBlocks.ReactorGlass, 1, "ReactorLaserFocusMatrix", -1, TileEntityReactorLaserFocusMatrix.class);
 
@@ -408,7 +484,7 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 		public int guiId;
 		public Class<? extends TileEntity> tileEntityClass;
 
-		private ReactorBlockType(Block b, int i, String s, int j, Class<? extends TileEntityElectricBlock> tileClass)
+		private ReactorBlockType(Block b, int i, String s, int j, Class<? extends TileEntity> tileClass)
 		{
 			typeBlock = b;
 			meta = i;

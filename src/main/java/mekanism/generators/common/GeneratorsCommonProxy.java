@@ -28,6 +28,11 @@ import mekanism.generators.common.tile.reactor.TileEntityReactorLaserFocusMatrix
 import mekanism.generators.common.tile.reactor.TileEntityReactorLogicAdapter;
 import mekanism.generators.common.tile.reactor.TileEntityReactorNeutronCapture;
 import mekanism.generators.common.tile.reactor.TileEntityReactorPort;
+import mekanism.generators.common.tile.fission.TileEntityControlRodAssembly;
+import mekanism.generators.common.tile.fission.TileEntityFissionCasing;
+import mekanism.generators.common.tile.fission.TileEntityFissionFuelAssembly;
+import mekanism.generators.common.tile.fission.TileEntityFissionLogicAdapter;
+import mekanism.generators.common.tile.fission.TileEntityFissionPort;
 import mekanism.generators.common.tile.turbine.TileEntityElectromagneticCoil;
 import mekanism.generators.common.tile.turbine.TileEntityRotationalComplex;
 import mekanism.generators.common.tile.turbine.TileEntitySaturatingCondenser;
@@ -70,6 +75,11 @@ public class GeneratorsCommonProxy implements IGuiProvider
 		GameRegistry.registerTileEntity(TileEntityRotationalComplex.class, "RotationalComplex");
 		GameRegistry.registerTileEntity(TileEntityElectromagneticCoil.class, "ElectromagneticCoil");
 		GameRegistry.registerTileEntity(TileEntitySaturatingCondenser.class, "SaturatingCondenser");
+		GameRegistry.registerTileEntity(TileEntityFissionCasing.class, "FissionCasing");
+		GameRegistry.registerTileEntity(TileEntityFissionPort.class, "FissionPort");
+		GameRegistry.registerTileEntity(TileEntityFissionLogicAdapter.class, "FissionLogicAdapter");
+		GameRegistry.registerTileEntity(TileEntityFissionFuelAssembly.class, "FissionFuelAssembly");
+		GameRegistry.registerTileEntity(TileEntityControlRodAssembly.class, "ControlRodAssembly");
 	}
 
 	/**
@@ -117,6 +127,15 @@ public class GeneratorsCommonProxy implements IGuiProvider
 		generators.turbineVentGasFlow = Mekanism.configurationgenerators.get("generation", "TurbineVentGasFlow", 16000D).getDouble();
 		generators.turbineDisperserGasFlow = Mekanism.configurationgenerators.get("generation", "TurbineDisperserGasFlow", 640D).getDouble();
 		generators.condenserRate = Mekanism.configurationgenerators.get("generation", "TurbineCondenserFlowRate", 32000).getInt();
+		generators.fissionEnergyPerFuel = Mekanism.configurationgenerators.get("generation", "FissionEnergyPerFuel", 1000000D, "Amount of heat created from each whole mB of fission fuel burned").getDouble();
+		generators.fissionCasingHeatCapacity = Mekanism.configurationgenerators.get("generation", "FissionCasingHeatCapacity", 1000D, "Heat capacity added to a fission reactor by each casing block").getDouble();
+		generators.fissionSurfaceAreaTarget = Mekanism.configurationgenerators.get("generation", "FissionSurfaceAreaTarget", 4D, "Average fuel assembly surface area needed for 100% boil efficiency").getDouble();
+		generators.fissionMeltdownsEnabled = Mekanism.configurationgenerators.get("generation", "FissionMeltdownsEnabled", true, "If false, an overdamaged reactor shuts down instead of exploding").getBoolean();
+		generators.fissionMeltdownRadius = (float)Mekanism.configurationgenerators.get("generation", "FissionMeltdownRadius", 8D, "Explosion radius of a fission reactor meltdown").getDouble();
+		generators.fissionMeltdownChance = Mekanism.configurationgenerators.get("generation", "FissionMeltdownChance", 0.001D, "Per-tick chance of a meltdown once damage passes 100%, scaled by damage").getDouble();
+		generators.fissionPostMeltdownDamage = Mekanism.configurationgenerators.get("generation", "FissionPostMeltdownDamage", 75D, "Damage a reactor is reset to after a meltdown").getDouble();
+		generators.fissionDefaultBurnRate = Mekanism.configurationgenerators.get("generation", "FissionDefaultBurnRate", 0.1D, "Default burn rate (mB/t) of a new fission reactor").getDouble();
+		generators.fissionBurnPerAssembly = Mekanism.configurationgenerators.get("generation", "FissionBurnPerAssembly", 1).getInt();
 		mekce_generators.enableWindmillWhitelist = Mekanism.configurationce.get("mekce_generation", "EnableWindmillWhitelist", true).getBoolean();
 		mekce_generators.laserHeatCoefficient = Mekanism.configurationce.get("mekce_generation", "laserHeatCoefficient", 1.0, "Laser Thermal Transfer Efficiency Multiplier. Default is 1.0").getDouble();
 		mekce_generators.fusionThermocoupleEfficiency = Mekanism.configurationce.get("mekce_generation", "FusionReactorEnergyEfficiency", 0.00125, "Fusion Reactor Energy Generation efficiency multiplier, Community Edition default is 0.00125, Legacy Mekanism default is 0.05").getDouble();
@@ -205,6 +224,9 @@ public class GeneratorsCommonProxy implements IGuiProvider
 				return new ContainerFilter(player.inventory, (TileEntityTurbineCasing)tileEntity);
 			case 7:
 				return new ContainerNull(player, (TileEntityTurbineCasing)tileEntity);
+			case 8:
+			case 9:
+				return new ContainerNull(player, (TileEntityFissionCasing)tileEntity);
 			case 10:
 				return new ContainerReactorController(player.inventory, (TileEntityReactorController)tileEntity);
 			case 11:
@@ -214,6 +236,7 @@ public class GeneratorsCommonProxy implements IGuiProvider
 			case 14:
 				return new ContainerNeutronCapture(player.inventory, (TileEntityReactorNeutronCapture)tileEntity);
 			case 15:
+			case 16:
 				return new ContainerNull(player, (TileEntityContainerBlock)tileEntity);
 		}
 		

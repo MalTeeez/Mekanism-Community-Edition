@@ -3,6 +3,10 @@ package mekanism.generators.client;
 import mekanism.generators.client.gui.GuiBioGenerator;
 import mekanism.generators.client.gui.GuiGasGenerator;
 import mekanism.generators.client.gui.GuiHeatGenerator;
+import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
+import mekanism.generators.client.gui.GuiFissionReactor;
+import mekanism.generators.client.gui.GuiFissionReactorLogicAdapter;
+import mekanism.generators.client.gui.GuiFissionReactorStats;
 import mekanism.generators.client.gui.GuiIndustrialTurbine;
 import mekanism.generators.client.gui.GuiNeutronCapture;
 import mekanism.generators.client.gui.GuiReactorController;
@@ -34,6 +38,8 @@ import mekanism.generators.common.tile.TileEntityWindGenerator;
 import mekanism.generators.common.tile.reactor.TileEntityReactorController;
 import mekanism.generators.common.tile.reactor.TileEntityReactorLogicAdapter;
 import mekanism.generators.common.tile.reactor.TileEntityReactorNeutronCapture;
+import mekanism.generators.common.tile.fission.TileEntityFissionCasing;
+import mekanism.generators.common.tile.fission.TileEntityFissionLogicAdapter;
 import mekanism.generators.common.tile.turbine.TileEntityTurbineCasing;
 import mekanism.generators.common.tile.turbine.TileEntityTurbineRotor;
 import mekanism.generators.common.tile.turbine.TileEntityTurbineValve;
@@ -74,6 +80,10 @@ public class GeneratorsClientProxy extends GeneratorsCommonProxy
 	@Override
 	public void registerRenderInformation()
 	{
+		//JSON models (fission assemblies); the resource pack belongs to whichever of the two mods is its container
+		ModelRegistry.registerModid("Mekanism");
+		ModelRegistry.registerModid("MekanismGenerators");
+
 		//Register block handler
 		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
 		
@@ -108,6 +118,10 @@ public class GeneratorsClientProxy extends GeneratorsCommonProxy
 				return new GuiIndustrialTurbine(player.inventory, (TileEntityTurbineCasing)tileEntity);
 			case 7:
 				return new GuiTurbineStats(player.inventory, (TileEntityTurbineCasing)tileEntity);
+			case 8:
+				return new GuiFissionReactor(player.inventory, (TileEntityFissionCasing)tileEntity);
+			case 9:
+				return new GuiFissionReactorStats(player.inventory, (TileEntityFissionCasing)tileEntity);
 			case 10:
 				return new GuiReactorController(player.inventory, (TileEntityReactorController)tileEntity);
 			case 11:
@@ -120,6 +134,8 @@ public class GeneratorsClientProxy extends GeneratorsCommonProxy
 				return new GuiNeutronCapture(player.inventory, (TileEntityReactorNeutronCapture)tileEntity);
 			case 15:
 				return new GuiReactorLogicAdapter(player.inventory, (TileEntityReactorLogicAdapter)tileEntity);
+			case 16:
+				return new GuiFissionReactorLogicAdapter(player.inventory, (TileEntityFissionLogicAdapter)tileEntity);
 		}
 		
 		return null;

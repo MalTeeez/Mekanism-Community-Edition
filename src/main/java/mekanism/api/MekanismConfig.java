@@ -194,6 +194,15 @@ public class MekanismConfig
 		public static double turbineVentGasFlow;
 		public static double turbineDisperserGasFlow;
 		public static int condenserRate;
+		public static double fissionEnergyPerFuel;
+		public static double fissionCasingHeatCapacity;
+		public static double fissionSurfaceAreaTarget;
+		public static boolean fissionMeltdownsEnabled;
+		public static float fissionMeltdownRadius;
+		public static double fissionMeltdownChance;
+		public static double fissionPostMeltdownDamage;
+		public static double fissionDefaultBurnRate;
+		public static int fissionBurnPerAssembly;
 	}
 
 	public static class mekce_generators
