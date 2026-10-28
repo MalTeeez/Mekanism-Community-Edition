@@ -8,11 +8,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class SynchronizedFissionData extends SynchronizedData<SynchronizedFissionData>
 {
-	public static final int FUEL_PER_ASSEMBLY = 8000;
-	public static final int WASTE_PER_ASSEMBLY = 8000;
-	public static final int COOLANT_PER_VOLUME = 100000;
-	public static final int HEATED_COOLANT_PER_VOLUME = 1000000;
-
 	public static final double MIN_DAMAGE_TEMPERATURE = 1200;
 	public static final double MAX_DAMAGE_TEMPERATURE = 1800;
 	public static final double MAX_DAMAGE = 100;
@@ -22,8 +17,6 @@ public class SynchronizedFissionData extends SynchronizedData<SynchronizedFissio
 	public static final double WATER_CONDUCTIVITY = 0.5;
 	public static final double WATER_THERMAL_ENTHALPY = 10;
 	public static final double STEAM_ENERGY_EFFICIENCY = 0.2;
-	//Upstream fissionMeltdownRadiationMultiplier default
-	public static final double MELTDOWN_RADIATION_MULTIPLIER = 50;
 	public static final double BASE_BOIL_TEMP = 373.15;
 	public static final double SODIUM_CONDUCTIVITY = 1;
 	public static final double SODIUM_ENTHALPY = 5;
@@ -61,23 +54,23 @@ public class SynchronizedFissionData extends SynchronizedData<SynchronizedFissio
 
 	public int getCoolantCapacity()
 	{
-		return volume*COOLANT_PER_VOLUME;
+		return (int)Math.min((long)volume*generators.fissionCooledCoolantPerTank, Integer.MAX_VALUE);
 	}
 
 	public int getHeatedCoolantCapacity()
 	{
 		//Upstream uses longs here; tanks are ints, so cap huge reactors
-		return (int)Math.min((long)volume*HEATED_COOLANT_PER_VOLUME, Integer.MAX_VALUE);
+		return (int)Math.min((long)volume*generators.fissionHeatedCoolantPerTank, Integer.MAX_VALUE);
 	}
 
 	public int getFuelCapacity()
 	{
-		return assemblies*FUEL_PER_ASSEMBLY;
+		return assemblies*generators.fissionMaxFuelPerAssembly;
 	}
 
 	public int getWasteCapacity()
 	{
-		return assemblies*WASTE_PER_ASSEMBLY;
+		return assemblies*generators.fissionMaxFuelPerAssembly;
 	}
 
 	public double getMaxBurnRate()

@@ -143,6 +143,10 @@ public class GeneratorsCommonProxy implements IGuiProvider
 		generators.fissionPostMeltdownDamage = Mekanism.configurationgenerators.get("generation", "FissionPostMeltdownDamage", 75D, "Damage a reactor is reset to after a meltdown").getDouble();
 		generators.fissionDefaultBurnRate = Mekanism.configurationgenerators.get("generation", "FissionDefaultBurnRate", 0.1D, "Default burn rate (mB/t) of a new fission reactor").getDouble();
 		generators.fissionBurnPerAssembly = Mekanism.configurationgenerators.get("generation", "FissionBurnPerAssembly", 1).getInt();
+		generators.fissionMeltdownRadiationMultiplier = Mekanism.configurationgenerators.get("generation", "FissionMeltdownRadiationMultiplier", 50D, "How much radioactivity of fuel/waste contents are multiplied during a meltdown").getDouble();
+		generators.fissionMaxFuelPerAssembly = Mekanism.configurationgenerators.get("generation", "FissionMaxFuelPerAssembly", 8000, "Amount of fuel (mB) that each assembly contributes to the fuel and waste capacity", 1, 1000000).getInt();
+		generators.fissionCooledCoolantPerTank = Mekanism.configurationgenerators.get("generation", "FissionCooledCoolantPerTank", 100000, "Amount of cooled coolant (mB) that each block of the fission reactor contributes to the volume", 1, 1000000).getInt();
+		generators.fissionHeatedCoolantPerTank = Mekanism.configurationgenerators.get("generation", "FissionHeatedCoolantPerTank", 1000000, "Amount of heated coolant (mB) that each block of the fission reactor contributes to the volume", 1000, 100000000).getInt();
 		mekce_generators.enableWindmillWhitelist = Mekanism.configurationce.get("mekce_generation", "EnableWindmillWhitelist", true).getBoolean();
 		mekce_generators.laserHeatCoefficient = Mekanism.configurationce.get("mekce_generation", "laserHeatCoefficient", 1.0, "Laser Thermal Transfer Efficiency Multiplier. Default is 1.0").getDouble();
 		mekce_generators.fusionThermocoupleEfficiency = Mekanism.configurationce.get("mekce_generation", "FusionReactorEnergyEfficiency", 0.00125, "Fusion Reactor Energy Generation efficiency multiplier, Community Edition default is 0.00125, Legacy Mekanism default is 0.05").getDouble();

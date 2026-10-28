@@ -320,6 +320,10 @@ public class MekanismGenerators implements IModule
 		dataStream.writeDouble(generators.fissionPostMeltdownDamage);
 		dataStream.writeDouble(generators.fissionDefaultBurnRate);
 		dataStream.writeInt(generators.fissionBurnPerAssembly);
+		dataStream.writeDouble(generators.fissionMeltdownRadiationMultiplier);
+		dataStream.writeInt(generators.fissionMaxFuelPerAssembly);
+		dataStream.writeInt(generators.fissionCooledCoolantPerTank);
+		dataStream.writeInt(generators.fissionHeatedCoolantPerTank);
 		dataStream.writeBoolean(mekce_generators.enableWindmillWhitelist);
 		dataStream.writeDouble(mekce_generators.laserHeatCoefficient);
 		dataStream.writeDouble(mekce_generators.fusionThermocoupleEfficiency);
@@ -382,6 +386,10 @@ public class MekanismGenerators implements IModule
 		generators.fissionPostMeltdownDamage = dataStream.readDouble();
 		generators.fissionDefaultBurnRate = dataStream.readDouble();
 		generators.fissionBurnPerAssembly = dataStream.readInt();
+		generators.fissionMeltdownRadiationMultiplier = dataStream.readDouble();
+		generators.fissionMaxFuelPerAssembly = dataStream.readInt();
+		generators.fissionCooledCoolantPerTank = dataStream.readInt();
+		generators.fissionHeatedCoolantPerTank = dataStream.readInt();
 		mekce_generators.enableWindmillWhitelist = dataStream.readBoolean();
 		mekce_generators.laserHeatCoefficient = dataStream.readDouble();
 		mekce_generators.fusionThermocoupleEfficiency = dataStream.readDouble();

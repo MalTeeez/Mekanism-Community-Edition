@@ -276,7 +276,7 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 				structure.wasteTank.stored = null;
 			}
 
-			contamination = (fuel+waste)*SynchronizedFissionData.MELTDOWN_RADIATION_MULTIPLIER;
+			contamination = (fuel+waste)*generators.fissionMeltdownRadiationMultiplier;
 		}
 
 		//Reset first; the explosions may tear the structure down
