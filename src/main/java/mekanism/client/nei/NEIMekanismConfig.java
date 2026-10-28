@@ -66,6 +66,9 @@ public class NEIMekanismConfig implements IConfigureNEI
 		
 		API.registerRecipeHandler(new SolarNeutronRecipeHandler());
 		API.registerUsageHandler(new SolarNeutronRecipeHandler());
+
+		API.registerRecipeHandler(new IsotopicCentrifugeRecipeHandler());
+		API.registerUsageHandler(new IsotopicCentrifugeRecipeHandler());
 		
 		API.registerRecipeHandler(new ShapedMekanismRecipeHandler());
 		API.registerUsageHandler(new ShapedMekanismRecipeHandler());
@@ -92,6 +95,7 @@ public class NEIMekanismConfig implements IConfigureNEI
 		API.setGuiOffset(GuiPRC.class, PRCRecipeHandler.xOffset, PRCRecipeHandler.yOffset);
 		API.setGuiOffset(GuiThermalEvaporationController.class, ThermalEvaporationRecipeHandler.xOffset, ThermalEvaporationRecipeHandler.yOffset);
 		API.setGuiOffset(GuiSolarNeutronActivator.class, SolarNeutronRecipeHandler.xOffset, SolarNeutronRecipeHandler.yOffset);
+		API.setGuiOffset(GuiIsotopicCentrifuge.class, IsotopicCentrifugeRecipeHandler.xOffset, IsotopicCentrifugeRecipeHandler.yOffset);
 		
 		GuiContainerManager.addSlotClickHandler(new MekanismSlotClickHandler());
 		

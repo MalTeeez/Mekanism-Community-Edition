@@ -5,6 +5,7 @@ import static mekanism.common.block.BlockBasic.BasicBlock.BASIC_BLOCK_2;
 import static mekanism.common.block.BlockMachine.MachineBlock.MACHINE_BLOCK_1;
 import static mekanism.common.block.BlockMachine.MachineBlock.MACHINE_BLOCK_2;
 import static mekanism.common.block.BlockMachine.MachineBlock.MACHINE_BLOCK_3;
+import static mekanism.common.block.BlockMachine.MachineBlock.MACHINE_BLOCK_4;
 import mekanism.common.block.BlockBasic;
 import mekanism.common.block.BlockBounding;
 import mekanism.common.block.BlockCardboardBox;
@@ -23,7 +24,11 @@ import mekanism.common.item.ItemBlockGasTank;
 import mekanism.common.item.ItemBlockMachine;
 import mekanism.common.item.ItemBlockOre;
 import mekanism.common.item.ItemBlockPlastic;
+import mekanism.common.block.MachineFacingProperty;
 import net.minecraft.block.Block;
+import net.minecraftforge.common.util.ForgeDirection;
+import com.gtnewhorizon.gtnhlib.blockstate.properties.IntegerBlockProperty;
+import com.gtnewhorizon.gtnhlib.blockstate.registry.BlockPropertyRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 
@@ -35,6 +40,7 @@ public class MekanismBlocks
 	public static final Block MachineBlock = new BlockMachine(MACHINE_BLOCK_1).setBlockName("MachineBlock");
 	public static final Block MachineBlock2 = new BlockMachine(MACHINE_BLOCK_2).setBlockName("MachineBlock2");
 	public static final Block MachineBlock3 = new BlockMachine(MACHINE_BLOCK_3).setBlockName("MachineBlock3");
+	public static final Block MachineBlock4 = new BlockMachine(MACHINE_BLOCK_4).setBlockName("MachineBlock4");
 	public static final Block OreBlock = new BlockOre("stone").setBlockName("OreBlock");
 	public static final Block DeepslateOreBlock = new BlockOre("deepslate").setBlockName("DeepslateOreBlock");
 	public static final Block ObsidianTNT = new BlockObsidianTNT().setBlockName("ObsidianTNT").setCreativeTab(Mekanism.tabMekanism);
@@ -60,6 +66,12 @@ public class MekanismBlocks
 		GameRegistry.registerBlock(MachineBlock, ItemBlockMachine.class, "MachineBlock");
 		GameRegistry.registerBlock(MachineBlock2, ItemBlockMachine.class, "MachineBlock2");
 		GameRegistry.registerBlock(MachineBlock3, ItemBlockMachine.class, "MachineBlock3");
+
+		//GTNHLib only models blocks whose registry name matches the lowercase asset domain of their blockstate
+		GameRegistry.registerBlock(MachineBlock4, ItemBlockMachine.class, "MachineBlock4", "mekanism");
+		BlockPropertyRegistry.registerBlockItemProperty(MachineBlock4, IntegerBlockProperty.meta("type"));
+		BlockPropertyRegistry.registerBlockItemProperty(MachineBlock4, new MachineFacingProperty(), ForgeDirection.NORTH);
+
 		GameRegistry.registerBlock(OreBlock, ItemBlockOre.class, "OreBlock");
 		GameRegistry.registerBlock(DeepslateOreBlock, ItemBlockOre.class, "DeepslateOreBlock");
 		GameRegistry.registerBlock(EnergyCube, ItemBlockEnergyCube.class, "EnergyCube");

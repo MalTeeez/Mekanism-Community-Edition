@@ -25,6 +25,7 @@
 	"tile.machine.cheminfuser": {"category": "block", "sounds": [{"name": "ChemicalInfuser", "stream": false}]},
 	"tile.machine.injection": {"category": "block", "sounds": [{"name": "ChemicalInjectionChamber", "stream": false}]},
 	"tile.machine.oxidizer": {"category": "block", "sounds": [{"name": "ChemicalOxidizer", "stream": false}]},
+	"tile.machine.centrifuge": {"category": "block", "sounds": [{"name": "isotopic_centrifuge", "stream": false}]},
 	"tile.machine.washer": {"category": "block", "sounds": [{"name": "ChemicalWasher", "stream": false}]},
 	"tile.machine.combiner": {"category": "block", "sounds": [{"name": "Combiner", "stream": false}]},
 	"tile.machine.compressor": {"category": "block", "sounds": [{"name": "Compressor", "stream": false}]},

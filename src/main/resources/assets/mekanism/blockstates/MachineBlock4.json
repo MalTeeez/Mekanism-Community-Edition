@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"type=0,facing=north": {
+			"model": "mekanism:blocks/machine/isotopic_centrifuge"
+		},
+		"type=0,facing=south": {
+			"model": "mekanism:blocks/machine/isotopic_centrifuge",
+			"y": 180
+		},
+		"type=0,facing=east": {
+			"model": "mekanism:blocks/machine/isotopic_centrifuge",
+			"y": 90
+		},
+		"type=0,facing=west": {
+			"model": "mekanism:blocks/machine/isotopic_centrifuge",
+			"y": 270
+		}
+	}
+}

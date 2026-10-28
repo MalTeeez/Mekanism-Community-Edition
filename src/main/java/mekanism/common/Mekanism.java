@@ -615,6 +615,10 @@ public class Mekanism
 			}));
 		}
 
+		MachineType.ISOTOPIC_CENTRIFUGE.addRecipe(new ShapedMekanismRecipe(new ItemStack(MekanismBlocks.MachineBlock4, 1, 0), new Object[]{
+				"III", "CTC", "III", Character.valueOf('I'), "ingotLead", Character.valueOf('C'), MekanismUtils.getControlCircuit(BaseTier.ULTIMATE), Character.valueOf('T'), MekanismUtils.getEmptyGasTank(GasTankTier.BASIC)
+		}));
+
 		if (MekanismConfig.recipes.enableInductionCasing) {
 			CraftingManager.getInstance().getRecipeList().add(new ShapedMekanismRecipe(new ItemStack(MekanismBlocks.BasicBlock2, 4, 1), new Object[]{
 					" S ", "SES", " S ", Character.valueOf('S'), "ingotSteel", Character.valueOf('E'), MekanismItems.EnergyTablet.getUnchargedItem()
@@ -1214,6 +1218,11 @@ public class Mekanism
 		);
 		//Solar Neutron Activator Recipes
 		RecipeHandler.addSolarNeutronRecipe(new GasStack(GasRegistry.getGas("lithium"), 1), new GasStack(GasRegistry.getGas("tritium"), 1));
+		RecipeHandler.addSolarNeutronRecipe(new GasStack(GasRegistry.getGas("nuclearWaste"), 10), new GasStack(GasRegistry.getGas("polonium"), 1));
+
+		//Isotopic Centrifuge Recipes
+		RecipeHandler.addIsotopicCentrifugeRecipe(new GasStack(GasRegistry.getGas("uraniumHexafluoride"), 1), new GasStack(GasRegistry.getGas("fissileFuel"), 1));
+		RecipeHandler.addIsotopicCentrifugeRecipe(new GasStack(GasRegistry.getGas("nuclearWaste"), 10), new GasStack(GasRegistry.getGas("plutonium"), 1));
 
 		//Infuse objects
 		InfuseRegistry.registerInfuseObject(new ItemStack(MekanismItems.BioFuel), new InfuseObject(InfuseRegistry.get("BIO"), 5));

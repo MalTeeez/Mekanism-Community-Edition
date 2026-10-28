@@ -25,6 +25,7 @@ import mekanism.common.inventory.container.ContainerChemicalDissolutionChamber;
 import mekanism.common.inventory.container.ContainerChemicalInfuser;
 import mekanism.common.inventory.container.ContainerChemicalOxidizer;
 import mekanism.common.inventory.container.ContainerChemicalWasher;
+import mekanism.common.inventory.container.ContainerIsotopicCentrifuge;
 import mekanism.common.inventory.container.ContainerDictionary;
 import mekanism.common.inventory.container.ContainerDigitalMiner;
 import mekanism.common.inventory.container.ContainerDynamicTank;
@@ -76,6 +77,7 @@ import mekanism.common.tile.TileEntityChemicalInfuser;
 import mekanism.common.tile.TileEntityChemicalInjectionChamber;
 import mekanism.common.tile.TileEntityChemicalOxidizer;
 import mekanism.common.tile.TileEntityChemicalWasher;
+import mekanism.common.tile.TileEntityIsotopicCentrifuge;
 import mekanism.common.tile.TileEntityCombiner;
 import mekanism.common.tile.TileEntityContainerBlock;
 import mekanism.common.tile.TileEntityCrusher;
@@ -191,6 +193,7 @@ public class CommonProxy implements IGuiProvider
 		GameRegistry.registerTileEntity(TileEntityPrecisionSawmill.class, "PrecisionSawmill");
 		GameRegistry.registerTileEntity(TileEntityChemicalDissolutionChamber.class, "ChemicalDissolutionChamber");
 		GameRegistry.registerTileEntity(TileEntityChemicalWasher.class, "ChemicalWasher");
+		GameRegistry.registerTileEntity(TileEntityIsotopicCentrifuge.class, "IsotopicCentrifuge");
 		GameRegistry.registerTileEntity(TileEntityChemicalCrystallizer.class, "ChemicalCrystallizer");
 		GameRegistry.registerTileEntity(TileEntitySeismicVibrator.class, "SeismicVibrator");
 		GameRegistry.registerTileEntity(TileEntityPRC.class, "PressurizedReactionChamber");
@@ -424,6 +427,7 @@ public class CommonProxy implements IGuiProvider
 		usage.gasCentrifugeUsage = Mekanism.configuration.get("usage", "GasCentrifugeUsage", 100D).getDouble();
 		usage.heavyWaterElectrolysisUsage = Mekanism.configuration.get("usage", "HeavyWaterElectrolysisUsage", 800D).getDouble();
 		usage.formulaicAssemblicatorUsage = Mekanism.configuration.get("usage", "FormulaicAssemblicatorUsage", 100D).getDouble();
+		usage.isotopicCentrifugeUsage = Mekanism.configuration.get("usage", "IsotopicCentrifugeUsage", 200D).getDouble();
 
 		Tier.loadConfig();
 
@@ -723,6 +727,8 @@ public class CommonProxy implements IGuiProvider
 				return new ContainerSecurityDesk(player.inventory, (TileEntitySecurityDesk)tileEntity);
 			case 58:
 				return new ContainerFuelwoodHeater(player.inventory, (TileEntityFuelwoodHeater)tileEntity);
+			case 59:
+				return new ContainerIsotopicCentrifuge(player.inventory, (TileEntityIsotopicCentrifuge)tileEntity);
 		}
 
 		return null;

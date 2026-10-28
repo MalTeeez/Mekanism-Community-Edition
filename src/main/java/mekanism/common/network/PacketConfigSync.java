@@ -123,6 +123,7 @@ public class PacketConfigSync implements IMessageHandler<ConfigSyncMessage, IMes
 			dataStream.writeDouble(usage.gasCentrifugeUsage);
 			dataStream.writeDouble(usage.heavyWaterElectrolysisUsage);
 			dataStream.writeDouble(usage.formulaicAssemblicatorUsage);
+			dataStream.writeDouble(usage.isotopicCentrifugeUsage);
 			dataStream.writeBoolean(recipes.enableOsmiumBlock);
 			dataStream.writeBoolean(recipes.enableRawOsmiumBlock);
 			dataStream.writeBoolean(recipes.enableRawOsmiumOreDictOreOsmium);
@@ -327,6 +328,7 @@ public class PacketConfigSync implements IMessageHandler<ConfigSyncMessage, IMes
 			usage.gasCentrifugeUsage = dataStream.readDouble();
 			usage.heavyWaterElectrolysisUsage = dataStream.readDouble();
 			usage.formulaicAssemblicatorUsage = dataStream.readDouble();
+			usage.isotopicCentrifugeUsage = dataStream.readDouble();
 			recipes.enableOsmiumBlock = dataStream.readBoolean();
 			recipes.enableRawOsmiumBlock = dataStream.readBoolean();
 			recipes.enableRawOsmiumOreDictOreOsmium = dataStream.readBoolean();

@@ -67,6 +67,7 @@ import mekanism.common.tile.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.TileEntityFuelwoodHeater;
 import mekanism.common.tile.TileEntityLaser;
 import mekanism.common.tile.TileEntityLaserAmplifier;
+import mekanism.common.tile.TileEntityIsotopicCentrifuge;
 import mekanism.common.tile.TileEntityLaserTractorBeam;
 import mekanism.common.tile.TileEntityLogisticalSorter;
 import mekanism.common.tile.TileEntityMetallurgicInfuser;
@@ -495,6 +496,8 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 					default:
 						return icons[meta][0];
 				}
+			case MACHINE_BLOCK_4:
+				return BASE_ICON;
 		}
 		
 		return null;
@@ -1164,7 +1167,8 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 	{
 		MACHINE_BLOCK_1,
 		MACHINE_BLOCK_2,
-		MACHINE_BLOCK_3;
+		MACHINE_BLOCK_3,
+		MACHINE_BLOCK_4;
 
 		public Block getBlock()
 		{
@@ -1176,6 +1180,8 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 					return MekanismBlocks.MachineBlock2;
 				case MACHINE_BLOCK_3:
 					return MekanismBlocks.MachineBlock3;
+				case MACHINE_BLOCK_4:
+					return MekanismBlocks.MachineBlock4;
 				default:
 					return null;
 			}
@@ -1222,7 +1228,8 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 		OREDICTIONIFICATOR(MachineBlock.MACHINE_BLOCK_3, 3, "Oredictionificator", 52, TileEntityOredictionificator.class, false, false, false),
 		RESISTIVE_HEATER(MachineBlock.MACHINE_BLOCK_3, 4, "ResistiveHeater", 53, TileEntityResistiveHeater.class, true, true, false),
 		FORMULAIC_ASSEMBLICATOR(MachineBlock.MACHINE_BLOCK_3, 5, "FormulaicAssemblicator", 56, TileEntityFormulaicAssemblicator.class, true, false, true),
-		FUELWOOD_HEATER(MachineBlock.MACHINE_BLOCK_3, 6, "FuelwoodHeater", 58, TileEntityFuelwoodHeater.class, false, false, false);
+		FUELWOOD_HEATER(MachineBlock.MACHINE_BLOCK_3, 6, "FuelwoodHeater", 58, TileEntityFuelwoodHeater.class, false, false, false),
+		ISOTOPIC_CENTRIFUGE(MachineBlock.MACHINE_BLOCK_4, 0, "IsotopicCentrifuge", 59, TileEntityIsotopicCentrifuge.class, true, true, true);
 
 		public MachineBlock typeBlock;
 		public int meta;
@@ -1393,6 +1400,8 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 					return 100;
 				case FORMULAIC_ASSEMBLICATOR:
 					return usage.formulaicAssemblicatorUsage;
+				case ISOTOPIC_CENTRIFUGE:
+					return usage.isotopicCentrifugeUsage;
 				default:
 					return 0;
 			}

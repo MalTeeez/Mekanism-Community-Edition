@@ -168,6 +168,8 @@ tile.MachineBlock3.ResistiveHeater.name=Resistive Heater
 tile.MachineBlock3.FormulaicAssemblicator.name=Formulaic Assemblicator
 tile.MachineBlock3.FuelwoodHeater.name=Fuelwood Heater
 
+//Machine Block 4
+tile.MachineBlock4.IsotopicCentrifuge.name=Isotopic Centrifuge
 
 //Plastic
 tile.PlasticBlock.name=Plastic Block
@@ -903,6 +905,7 @@ tooltip.FluidicPlenisher=A machine that is capable of creating entire lakes by f
 tooltip.Laser=An advanced form of linear energy transfer that utilizes an extremely collimated beam of light.
 tooltip.LaserAmplifier=A block that can be used to merge, redirect and amplify laser beams, with fine controls over when to fire.
 tooltip.LaserTractorBeam=A block used to merge and redirect laser beams. Collects drops from blocks it has broken.
+tooltip.IsotopicCentrifuge=A machine that separates isotopes from gases, producing fissile fuel from uranium hexafluoride and plutonium from nuclear waste.
 tooltip.SolarNeutronActivator=A machine that directs the neutron radiation of the sun into its internal reservoir, allowing for the slow creation of various isotopes.
 tooltip.Oredictionificator=A machine used to unify and translate between various items and blocks using the Ore Dictionary.
 tooltip.Factory=A machine that serves as an upgrade to regular machinery, allowing for multiple processing operations to occur at once.

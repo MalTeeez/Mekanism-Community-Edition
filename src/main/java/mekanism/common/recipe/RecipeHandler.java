@@ -39,6 +39,7 @@ import mekanism.common.recipe.machines.PurificationRecipe;
 import mekanism.common.recipe.machines.SawmillRecipe;
 import mekanism.common.recipe.machines.SeparatorRecipe;
 import mekanism.common.recipe.machines.SmeltingRecipe;
+import mekanism.common.recipe.machines.GasCentrifugeRecipe;
 import mekanism.common.recipe.machines.SolarNeutronRecipe;
 import mekanism.common.recipe.machines.ThermalEvaporationRecipe;
 import mekanism.common.recipe.machines.WasherRecipe;
@@ -252,6 +253,11 @@ public final class RecipeHandler
 		addRecipe(Recipe.SOLAR_NEUTRON_ACTIVATOR, new SolarNeutronRecipe(inputGas, outputGas));
 	}
 
+	public static void addIsotopicCentrifugeRecipe(GasStack inputGas, GasStack outputGas)
+	{
+		addRecipe(Recipe.ISOTOPIC_CENTRIFUGE, new GasCentrifugeRecipe(inputGas, outputGas));
+	}
+
 	public static void addAmbientGas(int dimensionID, String ambientGasName)
 	{
 		addRecipe(Recipe.AMBIENT_ACCUMULATOR, new AmbientGasRecipe(dimensionID, ambientGasName));
@@ -459,6 +465,19 @@ public final class RecipeHandler
 		return null;
 	}
 
+	public static GasCentrifugeRecipe getIsotopicCentrifugeRecipe(GasInput input)
+	{
+		if(input.isValid())
+		{
+			HashMap<GasInput, GasCentrifugeRecipe> recipes = Recipe.ISOTOPIC_CENTRIFUGE.get();
+
+			GasCentrifugeRecipe recipe = recipes.get(input);
+			return recipe == null ? null : recipe.copy();
+		}
+
+		return null;
+	}
+
 	public static PressurizedRecipe getPRCRecipe(PressurizedInput input)
 	{
 		if(input.isValid())
@@ -557,7 +576,8 @@ public final class RecipeHandler
 		PRESSURIZED_REACTION_CHAMBER(MachineType.PRESSURIZED_REACTION_CHAMBER.name, PressurizedInput.class, PressurizedOutput.class, PressurizedRecipe.class),
 		AMBIENT_ACCUMULATOR(MachineType.AMBIENT_ACCUMULATOR.name, IntegerInput.class, GasOutput.class, AmbientGasRecipe.class),
 		THERMAL_EVAPORATION_PLANT("ThermalEvaporationPlant", FluidInput.class, FluidOutput.class, ThermalEvaporationRecipe.class),
-		SOLAR_NEUTRON_ACTIVATOR(MachineType.SOLAR_NEUTRON_ACTIVATOR.name, GasInput.class, GasOutput.class, SolarNeutronRecipe.class);
+		SOLAR_NEUTRON_ACTIVATOR(MachineType.SOLAR_NEUTRON_ACTIVATOR.name, GasInput.class, GasOutput.class, SolarNeutronRecipe.class),
+		ISOTOPIC_CENTRIFUGE(MachineType.ISOTOPIC_CENTRIFUGE.name, GasInput.class, GasOutput.class, GasCentrifugeRecipe.class);
 
 		private HashMap recipes;
 		private String recipeName;

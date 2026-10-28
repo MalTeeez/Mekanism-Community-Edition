@@ -1,5 +1,6 @@
 package mekanism.client;
 
+import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
 import com.jadarstudios.developercapes.DevCapes;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -196,6 +197,9 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void registerRenderInformation()
 	{
+		//JSON models (machines)
+		ModelRegistry.registerModid("Mekanism");
+
 		RenderPartTransmitter.init();
 		RenderGlowPanel.init();
 
@@ -389,6 +393,8 @@ public class ClientProxy extends CommonProxy
 				return new GuiSecurityDesk(player.inventory, (TileEntitySecurityDesk)tileEntity);
 			case 58:
 				return new GuiFuelwoodHeater(player.inventory, (TileEntityFuelwoodHeater)tileEntity);
+			case 59:
+				return new GuiIsotopicCentrifuge(player.inventory, (TileEntityIsotopicCentrifuge)tileEntity);
 		}
 
 		return null;

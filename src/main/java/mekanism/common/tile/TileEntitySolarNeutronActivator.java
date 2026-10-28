@@ -178,7 +178,7 @@ public class TileEntitySolarNeutronActivator extends TileEntityContainerBlock im
 
 	public int operate(SolarNeutronRecipe recipe)
 	{
-		int operations = getUpgradedUsage();
+		int operations = Math.min(getUpgradedUsage(), Math.min(inputTank.getStored()/recipe.getInput().ingredient.amount, outputTank.getNeeded()/recipe.getOutput().output.amount));
 		
 		recipe.operate(inputTank, outputTank, operations);
 		

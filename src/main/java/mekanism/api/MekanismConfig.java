@@ -173,6 +173,7 @@ public class MekanismConfig
 		public static double heavyWaterElectrolysisUsage;
 		public static double formulaicAssemblicatorUsage;
 		public static double gasCentrifugeUsage;
+		public static double isotopicCentrifugeUsage;
 	}
 
 	public static class generators
