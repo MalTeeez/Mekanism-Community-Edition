@@ -125,7 +125,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  *
  */
 @Mod(modid = "Mekanism", name = "Mekanism", version = "GRADLE_MODVERSION", guiFactory = "mekanism.client.gui.ConfigGuiFactory",
-		dependencies = "required-after:gtnhlib;after:ForgeMultipart;after:BuildCraft;after:BuildCraftAPI;after:IC2;after:CoFHCore;" +
+		dependencies = "required-after:gtnhlib;after:u25core;after:ForgeMultipart;after:BuildCraft;after:BuildCraftAPI;after:IC2;after:CoFHCore;" +
 				"after:ComputerCraft;after:Galacticraft;after:MineTweaker3;after:etfuturum")
 public class Mekanism
 {
@@ -1558,6 +1558,8 @@ public class Mekanism
 
 		//Register with ForgeChunkManager
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkManager());
+
+		RadiationHooks.registerDefaults();
 
 		//Register to receive subscribed events
 		FMLCommonHandler.instance().bus().register(this);

@@ -30,6 +30,7 @@ import mekanism.generators.common.content.fission.FissionUpdateProtocol;
 import mekanism.generators.common.content.fission.SynchronizedFissionData;
 import net.minecraft.client.audio.ISound.AttenuationType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -102,6 +103,15 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 					}
 
 					handleCoolant();
+
+					if(structure.lastBurnRate > 0 && ticker % 20 == 0)
+					{
+						//Upstream doses entities inside a burning reactor by burn rate (Sv/s) plus waste radioactivity
+						Coord4D min = structure.minLocation, max = structure.maxLocation;
+						double svPerHour = structure.lastBurnRate*3600+RadiationHooks.getRadioactivity(structure.wasteTank.stored);
+
+						RadiationHooks.exposeArea(worldObj, AxisAlignedBB.getBoundingBox(min.xCoord+1, min.yCoord+1, min.zCoord+1, max.xCoord, max.yCoord, max.zCoord), svPerHour, 20);
+					}
 
 					double envLoss = (structure.temperature-structure.ambientTemp)/(IHeatTransfer.AIR_INVERSE_COEFFICIENT+SynchronizedFissionData.INVERSE_INSULATION_COEFFICIENT+SynchronizedFissionData.INVERSE_CONDUCTION_COEFFICIENT);
 					structure.temperature -= envLoss;
@@ -248,18 +258,25 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 	{
 		int minX = structure.minLocation.xCoord, minY = structure.minLocation.yCoord, minZ = structure.minLocation.zCoord;
 		int maxX = structure.maxLocation.xCoord, maxY = structure.maxLocation.yCoord, maxZ = structure.maxLocation.zCoord;
-		double chance = structure.temperature*structure.heatCapacity*SynchronizedFissionData.EXPLOSION_CHANCE;
+		double contamination = 0;
 
-		double centerX = (minX+maxX)/2D+0.5, centerY = (minY+maxY)/2D+0.5, centerZ = (minZ+maxZ)/2D+0.5;
-
-		if(structure.fuelTank.stored != null)
+		//Like upstream, radioactive tank contents are only consumed into the meltdown when radiation is on
+		if(RadiationHooks.isEnabled())
 		{
-			RadiationHooks.release(worldObj, centerX, centerY, centerZ, structure.fuelTank.stored.copy());
-		}
+			double fuel = RadiationHooks.getRadioactivity(structure.fuelTank.stored);
+			double waste = RadiationHooks.getRadioactivity(structure.wasteTank.stored);
 
-		if(structure.wasteTank.stored != null)
-		{
-			RadiationHooks.release(worldObj, centerX, centerY, centerZ, structure.wasteTank.stored.copy());
+			if(fuel > 0)
+			{
+				structure.fuelTank.stored = null;
+			}
+
+			if(waste > 0)
+			{
+				structure.wasteTank.stored = null;
+			}
+
+			contamination = (fuel+waste)*SynchronizedFissionData.MELTDOWN_RADIATION_MULTIPLIER;
 		}
 
 		//Reset first; the explosions may tear the structure down
@@ -272,13 +289,14 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 		structure.superheatedSodiumTank.stored = null;
 		structure.lastBurnRate = 0;
 
-		//ponytail: upstream spreads this over a 100 tick Meltdown object; resolved at once here
-		for(int i = 0; i < 100; i++)
+		if(RadiationHooks.isLoaded())
 		{
-			if(worldObj.rand.nextInt(10) == 0 && worldObj.rand.nextDouble() < chance)
-			{
-				worldObj.createExplosion(null, minX+worldObj.rand.nextInt(maxX-minX+1)+0.5, minY+worldObj.rand.nextInt(maxY-minY+1)+0.5, minZ+worldObj.rand.nextInt(maxZ-minZ+1)+0.5, generators.fissionMeltdownRadius, true);
-			}
+			//Upstream's 100 tick meltdown: spread out explosions, then contamination
+			RadiationHooks.scheduleMeltdown(worldObj, AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX+1, maxY+1, maxZ+1), generators.fissionMeltdownRadius, contamination, 100);
+		}
+		else {
+			//ponytail: one explosion without u25core; its scheduled meltdown is the full version
+			worldObj.createExplosion(null, (minX+maxX)/2D+0.5, (minY+maxY)/2D+0.5, (minZ+maxZ)/2D+0.5, generators.fissionMeltdownRadius, true);
 		}
 	}
 

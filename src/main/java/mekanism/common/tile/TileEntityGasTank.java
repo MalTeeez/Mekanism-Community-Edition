@@ -21,6 +21,7 @@ import mekanism.api.gas.IGasTankInfoProvider;
 import mekanism.api.gas.ITubeConnection;
 import mekanism.api.transmitters.TransmissionType;
 import mekanism.common.Mekanism;
+import mekanism.common.RadiationHooks;
 import mekanism.common.SideData;
 import mekanism.common.Tier.BaseTier;
 import mekanism.common.Tier.GasTankTier;
@@ -120,12 +121,12 @@ public class TileEntityGasTank extends TileEntityContainerBlock implements IGasH
 	
 			if(dumping == GasMode.DUMPING)
 			{
-				gasTank.draw(tier.storage/400, true);
+				RadiationHooks.release(worldObj, xCoord+0.5, yCoord+0.5, zCoord+0.5, gasTank.draw(tier.storage/400, true));
 			}
 	
 			if(dumping == GasMode.DUMPING_EXCESS && gasTank.getNeeded() < tier.output)
 			{
-				gasTank.draw(tier.output-gasTank.getNeeded(), true);
+				RadiationHooks.release(worldObj, xCoord+0.5, yCoord+0.5, zCoord+0.5, gasTank.draw(tier.output-gasTank.getNeeded(), true));
 			}
 			
 			int newGasAmount = gasTank.getStored();

@@ -22,7 +22,8 @@ public class SynchronizedFissionData extends SynchronizedData<SynchronizedFissio
 	public static final double WATER_CONDUCTIVITY = 0.5;
 	public static final double WATER_THERMAL_ENTHALPY = 10;
 	public static final double STEAM_ENERGY_EFFICIENCY = 0.2;
-	public static final double EXPLOSION_CHANCE = 1D/512000;
+	//Upstream fissionMeltdownRadiationMultiplier default
+	public static final double MELTDOWN_RADIATION_MULTIPLIER = 50;
 	public static final double BASE_BOIL_TEMP = 373.15;
 	public static final double SODIUM_CONDUCTIVITY = 1;
 	public static final double SODIUM_ENTHALPY = 5;
