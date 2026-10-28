@@ -139,6 +139,17 @@ public abstract class TileEntityMultiblock<T extends SynchronizedData<T>> extend
 	{
 		if(!worldObj.isRemote && (structure == null || !getSynchronizedData().didTick))
 		{
+			//The reform rebuilds from the stored cache, which is otherwise only synced when its tile ticks
+			if(structure != null && structure.inventoryID != null)
+			{
+				MultiblockCache<T> cache = getManager().inventories.get(structure.inventoryID);
+
+				if(cache != null)
+				{
+					cache.sync(structure);
+				}
+			}
+
 			getProtocol().doUpdate();
 
 			if(structure != null)
