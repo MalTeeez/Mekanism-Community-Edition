@@ -1,6 +1,11 @@
 package mekanism.gametest.fission;
 
+import java.util.ArrayList;
+
+import mekanism.api.Coord4D;
 import mekanism.gametest.GameTestUtil;
+import mekanism.generators.common.content.fission.SynchronizedFissionData;
+import net.minecraft.tileentity.TileEntity;
 import mekanism.generators.common.GeneratorsBlocks;
 import mekanism.generators.common.tile.fission.TileEntityFissionCasing;
 import mekanism.generators.common.tile.fission.TileEntityFissionLogicAdapter;
@@ -80,6 +85,30 @@ public final class FissionTestUtil
 		interior(helper, width, column);
 
 		return casing;
+	}
+
+	/**
+	 * Ticks the reactor by hand, so a test can run it for a while inside one synchronous step.
+	 * The once-per-world-tick guard is reset before every pass, and the real tick of the same world tick is then skipped by it again.
+	 */
+	public static void simulate(GameTestHelper helper, TileEntityFissionCasing casing, int passes)
+	{
+		for(int i = 0; i < passes && casing.structure != null; i++)
+		{
+			SynchronizedFissionData structure = casing.structure;
+
+			structure.lastSimulatedTick = -1;
+
+			for(Coord4D location : new ArrayList<Coord4D>(structure.locations))
+			{
+				TileEntity tile = location.getTileEntity(helper.getWorld());
+
+				if(tile instanceof TileEntityFissionCasing && !tile.isInvalid())
+				{
+					((TileEntityFissionCasing)tile).onUpdate();
+				}
+			}
+		}
 	}
 
 	public static TileEntityFissionPort port(GameTestHelper helper)
