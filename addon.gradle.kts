@@ -14,7 +14,7 @@ data class ModuleSpec(
 val extraModules = listOf(
     ModuleSpec(
         "core", listOf("mekanism", "com", "cofh"), "mcmod-core.info",
-        excludePaths = listOf("mekanism/generators", "mekanism/tools"),
+        excludePaths = listOf("mekanism/generators", "mekanism/tools", "mekanism/gametest"),
         assetsPath = "assets/mekanism"
     ),
     ModuleSpec(
@@ -96,8 +96,19 @@ for (mod in extraModules) {
     tasks.named("assemble") { dependsOn(devJarTasks[mod.classifier]!!, reobfJarTask, sourcesJarTask) }
 }
 
+// the gametest classes are excluded from every release jar, so dev runs get them from their own jar
+val gametestJar = tasks.register("gametestJar", Jar::class) {
+    from(mainSourceSet.output) { include("mekanism/gametest/**") }
+    archiveClassifier.set("gametest-dev")
+}
+dependencies {
+    add("runtimeOnlyNonPublishable", files(gametestJar))
+}
+
 // change the default jar to have an -all suffix
+tasks.matching { it.name == "sourcesJar" }.configureEach { (this as Jar).exclude("mekanism/gametest/**") }
 tasks.named("jar", Jar::class) {
+    exclude("mekanism/gametest/**")
     archiveClassifier.set("all-dev")
 }
 tasks.named("reobfJar", ReobfuscatedJar::class) {
