@@ -92,8 +92,11 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 					markDirty();
 				}
 
-				if(isRendering)
+				//A reform can leave a stale renderer behind, so simulate at most once per tick per structure
+				if(isRendering && structure.lastSimulatedTick != worldObj.getTotalWorldTime())
 				{
+					structure.lastSimulatedTick = worldObj.getTotalWorldTime();
+
 					if(structure.active)
 					{
 						burnFuel();
@@ -122,7 +125,7 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 					MekanismUtils.saveChunk(this);
 
 					//Interior blocks do not notify the multiblock when removed, so periodically revalidate
-					if(ticker % 100 == 0)
+					if(ticker > 0 && ticker % 100 == 0)
 					{
 						update();
 					}
