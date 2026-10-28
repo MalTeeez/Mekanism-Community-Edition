@@ -45,19 +45,19 @@ public class GenHandler implements IWorldGenerator
 			
 			if(general.leadGenerate)
 			{
-				generateOre(random, chunkX, chunkZ, world, 3, general.leadPerChunk, general.leadVeinSize, 0, 64, true);
+				generateOre(random, chunkX, chunkZ, world, 3, general.leadPerChunk, general.leadVeinSize, general.leadMinY, general.leadMaxY, true);
 			}
 
 			if(general.uraniumGenerate)
 			{
-				generateOre(random, chunkX, chunkZ, world, 4, general.uraniumPerChunk, general.uraniumVeinSize, 0, 8, true);
-				generateOre(random, chunkX, chunkZ, world, 4, general.uraniumBuriedPerChunk, general.uraniumBuriedVeinSize, 0, 56, true);
+				generateOre(random, chunkX, chunkZ, world, 4, general.uraniumPerChunk, general.uraniumVeinSize, general.uraniumMinY, general.uraniumMaxY, true);
+				generateOre(random, chunkX, chunkZ, world, 4, general.uraniumBuriedPerChunk, general.uraniumBuriedVeinSize, general.uraniumBuriedMinY, general.uraniumBuriedMaxY, true);
 			}
 
 			if(general.fluoriteGenerate)
 			{
-				generateOre(random, chunkX, chunkZ, world, 5, general.fluoritePerChunk, general.fluoriteVeinSize, 0, 23, false);
-				generateOre(random, chunkX, chunkZ, world, 5, general.fluoriteBuriedPerChunk, general.fluoriteBuriedVeinSize, 0, 4, true);
+				generateOre(random, chunkX, chunkZ, world, 5, general.fluoritePerChunk, general.fluoriteVeinSize, general.fluoriteMinY, general.fluoriteMaxY, false);
+				generateOre(random, chunkX, chunkZ, world, 5, general.fluoriteBuriedPerChunk, general.fluoriteBuriedVeinSize, general.fluoriteBuriedMinY, general.fluoriteBuriedMaxY, true);
 			}
 
 			for(int i = 0; i < general.saltPerChunk; i++)
