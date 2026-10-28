@@ -5,6 +5,8 @@ import mekanism.api.gas.GasStack;
 import mekanism.common.MekanismBlocks;
 import mekanism.common.content.boiler.SynchronizedBoilerData;
 import mekanism.common.tile.TileEntityBoilerCasing;
+import mekanism.common.tile.TileEntityFluidTank;
+import mekanism.common.tile.TileEntityGasTank;
 import mekanism.common.tile.TileEntityBoilerValve;
 import mekanism.common.tile.TileEntityBoilerValve.BoilerValveMode;
 import mekanism.gametest.GameTestUtil;
@@ -89,6 +91,70 @@ public class BoilerTests
 				GasStack drawn = output.drawGas(ForgeDirection.UNKNOWN, 50, true);
 
 				helper.assertTrue(drawn != null && drawn.getGas() == GasRegistry.getGas("sodium") && drawn.amount == Math.min(50, stored), "OUTPUT_COOLANT valve should draw sodium, got " + drawn);
+			})
+			.thenSucceed();
+	}
+
+	@GameTest(timeoutTicks = 30)
+	public static void steamValvePushesSteamIntoAdjacentFluidTank(GameTestHelper helper)
+	{
+		TileEntityBoilerCasing casing = build(helper);
+		TileEntityFluidTank tank = GameTestUtil.fluidTank(helper, 1, 3, -1);
+
+		casing.structure.steamStored = new FluidStack(FluidRegistry.getFluid("steam"), 500);
+		GameTestUtil.tile(helper, TileEntityBoilerValve.class, 1, 3, 0).mode = BoilerValveMode.OUTPUT_STEAM;
+
+		helper.startSequence()
+			.thenWaitUntil(20, () -> helper.assertTrue(tank.fluidTank.getFluidAmount() > 0, "OUTPUT_STEAM valve should push steam into the fluid tank"))
+			.thenExecute(() -> helper.assertTrue(tank.fluidTank.getFluid().getFluid() == FluidRegistry.getFluid("steam"), "Fluid tank should hold steam, got " + tank.fluidTank.getFluid()))
+			.thenSucceed();
+	}
+
+	@GameTest(timeoutTicks = 30)
+	public static void coolantValvePushesCooledSodiumIntoAdjacentGasTank(GameTestHelper helper)
+	{
+		TileEntityBoilerCasing casing = build(helper);
+		TileEntityGasTank tank = GameTestUtil.gasTank(helper, 1, 3, -1);
+
+		casing.structure.cooledSodiumTank.stored = new GasStack(GasRegistry.getGas("sodium"), 500);
+		GameTestUtil.tile(helper, TileEntityBoilerValve.class, 1, 3, 0).mode = BoilerValveMode.OUTPUT_COOLANT;
+
+		helper.startSequence()
+			.thenWaitUntil(20, () -> helper.assertTrue(tank.gasTank.getStored() > 0, "OUTPUT_COOLANT valve should push cooled sodium into the gas tank"))
+			.thenExecute(() -> helper.assertTrue(tank.gasTank.getGasType() == GasRegistry.getGas("sodium"), "Gas tank should hold sodium, got " + tank.gasTank.getGas()))
+			.thenSucceed();
+	}
+
+	@GameTest(timeoutTicks = 30)
+	public static void inputValvePushesNoGas(GameTestHelper helper)
+	{
+		TileEntityBoilerCasing casing = build(helper);
+		TileEntityGasTank tank = GameTestUtil.gasTank(helper, 1, 1, -1);
+
+		casing.structure.cooledSodiumTank.stored = new GasStack(GasRegistry.getGas("sodium"), 500);
+
+		helper.startSequence()
+			.thenIdle(10)
+			.thenExecute(() -> {
+				helper.assertEquals(0, tank.gasTank.getStored(), "INPUT valve must not push gas, tank holds " + tank.gasTank.getGas());
+				helper.assertEquals(500, casing.structure.cooledSodiumTank.getStored(), "Cooled sodium must stay in the boiler");
+			})
+			.thenSucceed();
+	}
+
+	@GameTest(timeoutTicks = 30)
+	public static void inputValvePushesNoSteam(GameTestHelper helper)
+	{
+		TileEntityBoilerCasing casing = build(helper);
+		TileEntityFluidTank tank = GameTestUtil.fluidTank(helper, 1, 1, -1);
+
+		casing.structure.steamStored = new FluidStack(FluidRegistry.getFluid("steam"), 500);
+
+		helper.startSequence()
+			.thenIdle(10)
+			.thenExecute(() -> {
+				helper.assertEquals(0, tank.fluidTank.getFluidAmount(), "INPUT valve must not push steam, tank holds " + tank.fluidTank.getFluid());
+				helper.assertEquals(500, casing.structure.steamStored.amount, "Steam must stay in the boiler");
 			})
 			.thenSucceed();
 	}

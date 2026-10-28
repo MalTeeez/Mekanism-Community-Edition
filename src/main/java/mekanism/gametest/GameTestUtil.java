@@ -1,7 +1,11 @@
 package mekanism.gametest;
 
-import net.minecraft.init.Blocks;
+import mekanism.api.transmitters.TransmissionType;
+import mekanism.common.MekanismBlocks;
+import mekanism.common.tile.TileEntityFluidTank;
+import mekanism.common.tile.TileEntityGasTank;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.gtnewhorizons.horizonqa.api.GameTestHelper;
 
@@ -34,5 +38,33 @@ public final class GameTestUtil
 	public static <T extends TileEntity> T tile(GameTestHelper helper, Class<T> type, int x, int y, int z)
 	{
 		return helper.assertTileEntityPresent(type, x, y, z);
+	}
+
+	/** Places a gas tank that takes gas from its south side and does not eject, removed again when the test ends. */
+	public static TileEntityGasTank gasTank(GameTestHelper helper, int x, int y, int z)
+	{
+		helper.setBlock(x, y, z, MekanismBlocks.GasTank, 0);
+		helper.afterTest(() -> helper.destroyBlock(x, y, z));
+
+		TileEntityGasTank tank = tile(helper, TileEntityGasTank.class, x, y, z);
+		tank.configComponent.setEjecting(TransmissionType.GAS, false);
+
+		for(int facing = 2; facing < 6 && !tank.canReceiveGas(ForgeDirection.SOUTH, null); facing++)
+		{
+			tank.facing = facing;
+		}
+
+		helper.assertTrue(tank.canReceiveGas(ForgeDirection.SOUTH, null), "Test precondition: the gas tank should accept gas on its south side");
+
+		return tank;
+	}
+
+	/** Places a basic fluid tank, removed again when the test ends. */
+	public static TileEntityFluidTank fluidTank(GameTestHelper helper, int x, int y, int z)
+	{
+		helper.setBlock(x, y, z, MekanismBlocks.MachineBlock2, 11);
+		helper.afterTest(() -> helper.destroyBlock(x, y, z));
+
+		return tile(helper, TileEntityFluidTank.class, x, y, z);
 	}
 }
