@@ -78,6 +78,8 @@ public class GuiBoilerStats extends GuiMekanism
 		fontRendererObj.drawString(LangUtils.localize("gui.heatTransfer"), 8, 49, 0x797979);
 		fontRendererObj.drawString(LangUtils.localize("gui.superheaters") + ": " + tileEntity.structure.superheatingElements, 14, 58, 0x404040);
 		
+		renderScaledText(LangUtils.localize("gui.superheatedSodium") + ": " + tileEntity.structure.superheatedSodiumTank.getStored() + " mB", 8, 65, 0x404040, 168);
+
 		int boilCapacity = (int)((tileEntity.structure.superheatingElements*general.superheatingHeatTransfer)/SynchronizedBoilerData.getHeatEnthalpy());
 		fontRendererObj.drawString(LangUtils.localize("gui.boilCapacity") + ": " + boilCapacity + " mB/t", 8, 72, 0x404040);
 		

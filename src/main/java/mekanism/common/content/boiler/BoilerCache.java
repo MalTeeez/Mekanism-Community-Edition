@@ -1,5 +1,6 @@
 package mekanism.common.content.boiler;
 
+import mekanism.api.gas.GasStack;
 import mekanism.common.multiblock.MultiblockCache;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -9,6 +10,9 @@ public class BoilerCache extends MultiblockCache<SynchronizedBoilerData>
 	public FluidStack water;
 	public FluidStack steam;
 	
+	public GasStack superheatedSodium;
+	public GasStack cooledSodium;
+	
 	public double temperature;
 
 	@Override
@@ -16,6 +20,8 @@ public class BoilerCache extends MultiblockCache<SynchronizedBoilerData>
 	{
 		data.waterStored = water;
 		data.steamStored = steam;
+		data.superheatedSodiumTank.stored = superheatedSodium;
+		data.cooledSodiumTank.stored = cooledSodium;
 		data.temperature = temperature;
 	}
 
@@ -24,6 +30,8 @@ public class BoilerCache extends MultiblockCache<SynchronizedBoilerData>
 	{
 		water = data.waterStored;
 		steam = data.steamStored;
+		superheatedSodium = data.superheatedSodiumTank.stored;
+		cooledSodium = data.cooledSodiumTank.stored;
 		temperature = data.temperature;
 	}
 
@@ -40,6 +48,16 @@ public class BoilerCache extends MultiblockCache<SynchronizedBoilerData>
 			steam = FluidStack.loadFluidStackFromNBT(nbtTags.getCompoundTag("cachedSteam"));
 		}
 		
+		if(nbtTags.hasKey("cachedSuperheatedSodium"))
+		{
+			superheatedSodium = GasStack.readFromNBT(nbtTags.getCompoundTag("cachedSuperheatedSodium"));
+		}
+		
+		if(nbtTags.hasKey("cachedCooledSodium"))
+		{
+			cooledSodium = GasStack.readFromNBT(nbtTags.getCompoundTag("cachedCooledSodium"));
+		}
+		
 		temperature = nbtTags.getDouble("temperature");
 	}
 
@@ -54,6 +72,16 @@ public class BoilerCache extends MultiblockCache<SynchronizedBoilerData>
 		if(steam != null)
 		{
 			nbtTags.setTag("cachedSteam", steam.writeToNBT(new NBTTagCompound()));
+		}
+		
+		if(superheatedSodium != null)
+		{
+			nbtTags.setTag("cachedSuperheatedSodium", superheatedSodium.write(new NBTTagCompound()));
+		}
+		
+		if(cooledSodium != null)
+		{
+			nbtTags.setTag("cachedCooledSodium", cooledSodium.write(new NBTTagCompound()));
 		}
 		
 		nbtTags.setDouble("temperature", temperature);

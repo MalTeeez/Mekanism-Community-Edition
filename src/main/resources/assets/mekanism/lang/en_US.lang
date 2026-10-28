@@ -552,6 +552,9 @@ gui.providers=providers
 gui.structure=Structure
 gui.dynamicTank=Dynamic Tank
 gui.industrialTurbine=Industrial Turbine
+gui.boilerValveMode.INPUT=Input
+gui.boilerValveMode.OUTPUT_STEAM=Output Steam
+gui.boilerValveMode.OUTPUT_COOLANT=Output Coolant
 gui.thermoelectricBoiler=Thermoelectric Boiler
 gui.visuals=Visuals
 gui.noEject=Can't Eject
@@ -779,6 +782,7 @@ tooltip.configurator.inductionPortMode=Toggled Induction Port transfer mode to
 tooltip.configurator.toggleColor=Color bumped to
 tooltip.configurator.viewColor=Current color
 tooltip.configurator.reactorPortEject=Toggled Reactor Port eject mode to
+tooltip.configurator.boilerValveMode=Boiler Valve mode set to
 
 tooltip.upgrade.speed=Speed
 tooltip.upgrade.energy=Energy

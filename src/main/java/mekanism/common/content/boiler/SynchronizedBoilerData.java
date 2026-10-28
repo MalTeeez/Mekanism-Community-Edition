@@ -8,6 +8,7 @@ import java.util.Set;
 import mekanism.api.Coord4D;
 import mekanism.api.IHeatTransfer;
 import mekanism.api.MekanismConfig.general;
+import mekanism.api.gas.GasTank;
 import mekanism.api.util.UnitDisplayUtils.TemperatureUnit;
 import mekanism.common.content.tank.SynchronizedTankData.ValveData;
 import mekanism.common.multiblock.SynchronizedData;
@@ -23,6 +24,14 @@ public class SynchronizedBoilerData extends SynchronizedData<SynchronizedBoilerD
 	public static double CASING_INSULATION_COEFFICIENT = 1;
 	public static double CASING_INVERSE_CONDUCTION_COEFFICIENT = 1;
 	public static double BASE_BOIL_TEMP = 100-(TemperatureUnit.AMBIENT.zeroOffset-TemperatureUnit.CELSIUS.zeroOffset);
+	
+	public static double SODIUM_COOLING_EFFICIENCY = 0.4;
+	//Upstream: 1 mB superheated sodium delivers 5 heat, and 1 steam costs 10/0.2 = 50 heat, so 5/50 steam
+	public static double SODIUM_STEAM_PER_MB = 0.1;
+	public static double HEATED_COOLANT_TEMP = 100000;
+	
+	public GasTank superheatedSodiumTank = new GasTank(0);
+	public GasTank cooledSodiumTank = new GasTank(0);
 	
 	public FluidStack waterStored;
 	public FluidStack prevWater;

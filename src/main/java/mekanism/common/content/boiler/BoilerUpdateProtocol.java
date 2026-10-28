@@ -216,6 +216,27 @@ public class BoilerUpdateProtocol extends UpdateProtocol<SynchronizedBoilerData>
 			((BoilerCache)cache).steam.amount += ((BoilerCache)merge).steam.amount;
 		}
 		
+		BoilerCache c = (BoilerCache)cache;
+		BoilerCache m = (BoilerCache)merge;
+		
+		if(c.superheatedSodium == null)
+		{
+			c.superheatedSodium = m.superheatedSodium;
+		}
+		else if(m.superheatedSodium != null && c.superheatedSodium.isGasEqual(m.superheatedSodium))
+		{
+			c.superheatedSodium.amount += m.superheatedSodium.amount;
+		}
+		
+		if(c.cooledSodium == null)
+		{
+			c.cooledSodium = m.cooledSodium;
+		}
+		else if(m.cooledSodium != null && c.cooledSodium.isGasEqual(m.cooledSodium))
+		{
+			c.cooledSodium.amount += m.cooledSodium.amount;
+		}
+		
 		((BoilerCache)cache).temperature = Math.max(((BoilerCache)cache).temperature, ((BoilerCache)merge).temperature);
 	}
 
@@ -233,6 +254,11 @@ public class BoilerUpdateProtocol extends UpdateProtocol<SynchronizedBoilerData>
 		{
 			(structureFound).steamStored.amount = Math.min((structureFound).steamStored.amount, structureFound.steamVolume*STEAM_PER_TANK);
 		}
+		
+		structureFound.superheatedSodiumTank.setMaxGas(structureFound.steamVolume*STEAM_PER_TANK);
+		structureFound.cooledSodiumTank.setMaxGas(structureFound.steamVolume*STEAM_PER_TANK);
+		structureFound.superheatedSodiumTank.setGas(structureFound.superheatedSodiumTank.stored);
+		structureFound.cooledSodiumTank.setGas(structureFound.cooledSodiumTank.stored);
 	}
 
 	@Override

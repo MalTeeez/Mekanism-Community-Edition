@@ -9,6 +9,8 @@ import java.util.Set;
 import mekanism.api.Coord4D;
 import mekanism.api.IHeatTransfer;
 import mekanism.api.Range4D;
+import mekanism.api.gas.GasRegistry;
+import mekanism.api.gas.GasStack;
 import mekanism.common.Mekanism;
 import mekanism.common.content.boiler.BoilerCache;
 import mekanism.common.content.boiler.BoilerUpdateProtocol;
@@ -127,6 +129,19 @@ public class TileEntityBoilerCasing extends TileEntityMultiblock<SynchronizedBoi
 					structure.applyTemperatureChange();
 					structure.lastEnvironmentLoss = d[1];
 					
+					if(structure.superheatedSodiumTank.getStored() > 0)
+					{
+						int toCool = (int)Math.round(SynchronizedBoilerData.SODIUM_COOLING_EFFICIENCY*structure.superheatedSodiumTank.getStored()*(1-structure.temperature/SynchronizedBoilerData.HEATED_COOLANT_TEMP));
+						toCool = Math.min(toCool, structure.cooledSodiumTank.getNeeded());
+						
+						if(toCool > 0)
+						{
+							structure.superheatedSodiumTank.draw(toCool, true);
+							structure.cooledSodiumTank.receive(new GasStack(GasRegistry.getGas("sodium"), toCool), true);
+							structure.temperature += toCool*SynchronizedBoilerData.SODIUM_STEAM_PER_MB*SynchronizedBoilerData.getHeatEnthalpy()/structure.locations.size();
+						}
+					}
+					
 					if(structure.temperature >= SynchronizedBoilerData.BASE_BOIL_TEMP && structure.waterStored != null)
 					{
 						int steamAmount = structure.steamStored != null ? structure.steamStored.amount : 0;
@@ -241,6 +256,9 @@ public class TileEntityBoilerCasing extends TileEntityMultiblock<SynchronizedBoi
 				data.add(0);
 			}
 
+			writeGas(data, structure.superheatedSodiumTank.stored);
+			writeGas(data, structure.cooledSodiumTank.stored);
+
 			structure.upperRenderLocation.write(data);
 			
 			if(isRendering)
@@ -303,6 +321,11 @@ public class TileEntityBoilerCasing extends TileEntityMultiblock<SynchronizedBoi
 					structure.steamStored = null;
 				}
 				
+				structure.superheatedSodiumTank.setMaxGas(clientSteamCapacity);
+				structure.cooledSodiumTank.setMaxGas(clientSteamCapacity);
+				structure.superheatedSodiumTank.stored = readGas(dataStream);
+				structure.cooledSodiumTank.stored = readGas(dataStream);
+				
 				structure.upperRenderLocation = Coord4D.read(dataStream);
 		
 				if(isRendering)
@@ -332,6 +355,24 @@ public class TileEntityBoilerCasing extends TileEntityMultiblock<SynchronizedBoi
 				}
 			}
 		}
+	}
+
+	private void writeGas(ArrayList data, GasStack stack)
+	{
+		if(stack != null)
+		{
+			data.add(1);
+			data.add(stack.getGas().getID());
+			data.add(stack.amount);
+		}
+		else {
+			data.add(0);
+		}
+	}
+
+	private GasStack readGas(ByteBuf dataStream)
+	{
+		return dataStream.readInt() == 1 ? new GasStack(dataStream.readInt(), dataStream.readInt()) : null;
 	}
 
 	public int getScaledWaterLevel(int i)
