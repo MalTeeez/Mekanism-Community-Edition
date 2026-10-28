@@ -15,6 +15,7 @@ import mekanism.common.multiblock.SynchronizedData;
 import mekanism.common.multiblock.UpdateProtocol;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -165,10 +166,13 @@ public abstract class TileEntityMultiblock<T extends SynchronizedData<T>> extend
 		{
 			for(Coord4D obj : getSynchronizedData().locations)
 			{
-				TileEntityMultiblock<T> tileEntity = (TileEntityMultiblock<T>)obj.getTileEntity(worldObj);
+				//Glass in the frame has no multiblock tile
+				TileEntity tile = obj.getTileEntity(worldObj);
 
-				if(tileEntity != null && tileEntity.isRendering)
+				if(tile instanceof TileEntityMultiblock && ((TileEntityMultiblock<T>)tile).isRendering)
 				{
+					TileEntityMultiblock<T> tileEntity = (TileEntityMultiblock<T>)tile;
+
 					Mekanism.packetHandler.sendToReceivers(new TileEntityMessage(Coord4D.get(tileEntity), tileEntity.getNetworkedData(new ArrayList())), new Range4D(Coord4D.get(tileEntity)));
 				}
 			}
