@@ -144,7 +144,7 @@ public class TileEntityFissionPort extends TileEntityFissionCasing implements IF
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if(!canFill(from, resource.getFluid()))
+		if(resource == null || !canFill(from, resource.getFluid()))
 		{
 			return 0;
 		}

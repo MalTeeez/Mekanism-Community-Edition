@@ -83,7 +83,7 @@ public class IsotopicCentrifugeRecipeHandler extends BaseRecipeHandler
 			displayGauge(58, 26-xOffset, 14-yOffset, 176, 0, 58, null, recipe.inputStack);
 		}
 
-		if(recipe.inputStack != null)
+		if(recipe.outputStack != null)
 		{
 			displayGauge(58, 134-xOffset, 14-yOffset, 176, 0, 58, null, recipe.outputStack);
 		}
