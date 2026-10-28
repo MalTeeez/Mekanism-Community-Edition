@@ -31,14 +31,25 @@ import mekanism.generators.common.content.fission.SynchronizedFissionData;
 import net.minecraft.client.audio.ISound.AttenuationType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.sxmaa.u25core.api.radiation.IRadiationSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFissionData> implements IHasSound, ISoundSource
+@Optional.Interface(iface = "net.sxmaa.u25core.api.radiation.IRadiationSource", modid = "u25core")
+public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFissionData> implements IHasSound, ISoundSource, IRadiationSource
 {
+	/** Only the casing running the reactor emits, so the reactor counts once */
+	@Override
+	@Optional.Method(modid = "u25core")
+	public double getRadiationEmission()
+	{
+		return isRendering && structure != null ? structure.lastBurnRate*generators.fissionRadiationEmission : 0;
+	}
+
 	@SideOnly(Side.CLIENT)
 	public SoundWrapper sound;
 

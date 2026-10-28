@@ -221,6 +221,7 @@ public class MekanismConfig
 		public static double fissionDefaultBurnRate;
 		public static int fissionBurnPerAssembly;
 		public static double fissionMeltdownRadiationMultiplier;
+		public static double fissionRadiationEmission;
 		public static int fissionMaxFuelPerAssembly;
 		public static int fissionCooledCoolantPerTank;
 		public static int fissionHeatedCoolantPerTank;
