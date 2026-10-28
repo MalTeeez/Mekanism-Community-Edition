@@ -31,6 +31,13 @@ public class FissionUpdateProtocol extends UpdateProtocol<SynchronizedFissionDat
 	}
 
 	@Override
+	public boolean isViableNode(int x, int y, int z)
+	{
+		//Like upstream, the fission reactor shares the fusion reactor's glass; it has no multiblock tile of its own
+		return super.isViableNode(x, y, z) || (pointer.getWorldObj().getBlock(x, y, z) == GeneratorsBlocks.ReactorGlass && pointer.getWorldObj().getBlockMetadata(x, y, z) == ReactorBlockType.GLASS.meta);
+	}
+
+	@Override
 	protected boolean isValidFrame(int x, int y, int z)
 	{
 		if(pointer.getWorldObj().getBlock(x, y, z) == GeneratorsBlocks.Reactor)

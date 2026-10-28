@@ -379,18 +379,32 @@ public class BlockReactor extends BlockContainer implements IBlockCTM, BlockMode
 		}
 	}
 
-	/** Interior blocks do not notify the frame, so look for the reactor it belongs to and have it revalidate. */
+	/** Interior blocks do not notify the frame, so find a casing of the reactor they belong to and have it revalidate. */
 	private void updateReactor(World world, int x, int y, int z)
 	{
 		for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
-			for(int i = 1; i < 18; i++)
-			{
-				int cx = x+side.offsetX*i, cy = y+side.offsetY*i, cz = z+side.offsetZ*i;
-				Block neighbor = world.getBlock(cx, cy, cz);
+			//Walk through the interior to the wall
+			int i = 1;
 
-				if(neighbor == GeneratorsBlocks.Reactor)
+			while(i < 18 && (world.isAirBlock(x+side.offsetX*i, y+side.offsetY*i, z+side.offsetZ*i) || world.getBlock(x+side.offsetX*i, y+side.offsetY*i, z+side.offsetZ*i) == this))
+			{
+				i++;
+			}
+
+			int wx = x+side.offsetX*i, wy = y+side.offsetY*i, wz = z+side.offsetZ*i;
+
+			//Walls may be glass, but every edge of a valid reactor is casing, so follow the wall until one turns up
+			for(ForgeDirection along : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if(along == side || along == side.getOpposite())
 				{
+					continue;
+				}
+
+				for(int j = 0; j < 18; j++)
+				{
+					int cx = wx+along.offsetX*j, cy = wy+along.offsetY*j, cz = wz+along.offsetZ*j;
 					TileEntity tile = world.getTileEntity(cx, cy, cz);
 
 					if(tile instanceof TileEntityFissionCasing)
@@ -405,23 +419,21 @@ public class BlockReactor extends BlockContainer implements IBlockCTM, BlockMode
 						casing.update();
 						return;
 					}
-				}
 
-				if(neighbor != this && !world.isAirBlock(cx, cy, cz))
-				{
-					//Structural glass forwards to the multiblock it belongs to
-					TileEntity tile = world.getTileEntity(cx, cy, cz);
-
-					if(tile instanceof IStructuralMultiblock)
+					if(!isWall(world, cx, cy, cz))
 					{
-						((IStructuralMultiblock)tile).update();
-						return;
+						break;
 					}
-
-					break;
 				}
 			}
 		}
+	}
+
+	private static boolean isWall(World world, int x, int y, int z)
+	{
+		Block block = world.getBlock(x, y, z);
+
+		return block == GeneratorsBlocks.Reactor || block == GeneratorsBlocks.ReactorGlass || world.getTileEntity(x, y, z) instanceof IStructuralMultiblock;
 	}
 
 	/*This method is not used, metadata manipulation is required to create a Tile Entity.*/

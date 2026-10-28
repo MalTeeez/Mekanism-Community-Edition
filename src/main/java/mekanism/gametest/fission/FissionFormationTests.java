@@ -82,6 +82,22 @@ public class FissionFormationTests
 	}
 
 	@GameTest(timeoutTicks = 20)
+	public static void formsWithReactorGlassWalls(GameTestHelper helper)
+	{
+		//Regression: reactor glass (shared with fusion, like upstream) has no multiblock tile, so the shell scan rejected it
+		TileEntityFissionCasing casing = FissionTestUtil.shell(helper, 5, 6, true);
+
+		helper.startSequence()
+			.thenIdle(2)
+			.thenExecute(() -> {
+				FissionTestUtil.interior(helper, 5, ".FR.");
+				helper.assertNotNull(casing.structure, "A shell with reactor glass faces should form");
+				helper.assertEquals(1, casing.structure.assemblies, "Fuel assembly count");
+			})
+			.thenSucceed();
+	}
+
+	@GameTest(timeoutTicks = 20)
 	public static void breakingAFuelAssemblyUpdatesTheStructure(GameTestHelper helper)
 	{
 		TileEntityFissionCasing casing = FissionTestUtil.form(helper, 5, ".FFR.");

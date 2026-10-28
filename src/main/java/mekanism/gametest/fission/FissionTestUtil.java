@@ -20,6 +20,12 @@ public final class FissionTestUtil
 	 */
 	public static TileEntityFissionCasing shell(GameTestHelper helper, int width, int height)
 	{
+		return shell(helper, width, height, false);
+	}
+
+	/** With glass, every face block that is not on an edge is Reactor Glass, like a typical player build. */
+	public static TileEntityFissionCasing shell(GameTestHelper helper, int width, int height, boolean glass)
+	{
 		for(int x = 0; x < width; x++)
 		{
 			for(int y = 0; y < height; y++)
@@ -29,7 +35,15 @@ public final class FissionTestUtil
 					if(GameTestUtil.onShell(x, y, z, width, height, width))
 					{
 						int meta = x == 1 && y == 1 && z == 0 ? PORT : x == 1 && y == 2 && z == 0 ? ADAPTER : CASING;
-						helper.setBlock(x, y, z, GeneratorsBlocks.Reactor, meta);
+						int edges = (x == 0 || x == width-1 ? 1 : 0)+(y == 0 || y == height-1 ? 1 : 0)+(z == 0 || z == width-1 ? 1 : 0);
+
+						if(glass && meta == CASING && edges == 1)
+						{
+							helper.setBlock(x, y, z, GeneratorsBlocks.ReactorGlass, 0);
+						}
+						else {
+							helper.setBlock(x, y, z, GeneratorsBlocks.Reactor, meta);
+						}
 					}
 				}
 			}
