@@ -107,6 +107,13 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 
 					handleCoolant();
 
+					//Clients only hear about the burn state through the renderer, e.g. for the reactor sound
+					if(structure.isBurning() != structure.clientBurning)
+					{
+						structure.clientBurning = structure.isBurning();
+						sendPacketToRenderer();
+					}
+
 					if(structure.lastBurnRate > 0 && ticker % 20 == 0)
 					{
 						//Upstream doses entities inside a burning reactor by burn rate (Sv/s) plus waste radioactivity

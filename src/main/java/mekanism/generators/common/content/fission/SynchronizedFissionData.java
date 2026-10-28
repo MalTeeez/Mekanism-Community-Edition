@@ -44,6 +44,7 @@ public class SynchronizedFissionData extends SynchronizedData<SynchronizedFissio
 	public double rateLimit = generators.fissionDefaultBurnRate;
 	public double lastBurnRate;
 	public long lastSimulatedTick = -1;
+	public boolean clientBurning;
 	public double burnRemaining;
 	public double partialWaste;
 
