@@ -15,32 +15,18 @@ public final class FissionTestUtil
 	private FissionTestUtil() {}
 
 	/**
-	 * Builds a 3x3 reactor shell around a single interior column. The column is read bottom to top:
-	 * F fuel assembly, R control rod, . air. A port sits at (1,1,0) and a logic adapter at (1,2,0).
+	 * Builds a square reactor shell around a single interior column in its centre, height blocks tall. A port sits at (1,1,0) and a logic adapter at (1,2,0).
 	 * @return the casing in the (0,0,0) corner
 	 */
-	public static TileEntityFissionCasing build(GameTestHelper helper, String column)
+	public static TileEntityFissionCasing shell(GameTestHelper helper, int width, int height)
 	{
-		int height = column.length()+2;
-
-		//Interior first: the shell forms the structure as soon as it is complete, and interior blocks do not retrigger the check
-		for(int i = 0; i < column.length(); i++)
-		{
-			char c = column.charAt(i);
-
-			if(c != '.')
-			{
-				helper.setBlock(1, i+1, 1, GeneratorsBlocks.FissionAssembly, c == 'F' ? 0 : 1);
-			}
-		}
-
-		for(int x = 0; x < 3; x++)
+		for(int x = 0; x < width; x++)
 		{
 			for(int y = 0; y < height; y++)
 			{
-				for(int z = 0; z < 3; z++)
+				for(int z = 0; z < width; z++)
 				{
-					if(GameTestUtil.onShell(x, y, z, 3, height, 3))
+					if(GameTestUtil.onShell(x, y, z, width, height, width))
 					{
 						int meta = x == 1 && y == 1 && z == 0 ? PORT : x == 1 && y == 2 && z == 0 ? ADAPTER : CASING;
 						helper.setBlock(x, y, z, GeneratorsBlocks.Reactor, meta);
@@ -49,16 +35,35 @@ public final class FissionTestUtil
 			}
 		}
 
-		GameTestUtil.clearOnFinish(helper, 3, height, 3);
+		GameTestUtil.clearOnFinish(helper, width, height, width);
 
 		return GameTestUtil.tile(helper, TileEntityFissionCasing.class, 0, 0, 0);
 	}
 
-	/** Builds the reactor and runs the structure check right away. */
+	/** Fills the interior column, read bottom to top: F fuel assembly, R control rod, . air. */
+	public static void interior(GameTestHelper helper, int width, String column)
+	{
+		for(int i = 0; i < column.length(); i++)
+		{
+			char c = column.charAt(i);
+
+			if(c != '.')
+			{
+				helper.setBlock(width/2, i+1, width/2, GeneratorsBlocks.FissionAssembly, c == 'F' ? 0 : 1);
+			}
+		}
+	}
+
+	/** Builds the shell, then the interior; placing the interior makes the reactor form on its own. */
 	public static TileEntityFissionCasing form(GameTestHelper helper, String column)
 	{
-		TileEntityFissionCasing casing = build(helper, column);
-		casing.update();
+		return form(helper, 3, column);
+	}
+
+	public static TileEntityFissionCasing form(GameTestHelper helper, int width, String column)
+	{
+		TileEntityFissionCasing casing = shell(helper, width, column.length()+2);
+		interior(helper, width, column);
 
 		return casing;
 	}

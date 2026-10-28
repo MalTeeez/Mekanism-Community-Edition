@@ -9,6 +9,7 @@ import mekanism.common.Mekanism;
 import mekanism.common.base.IBlockCTM;
 import mekanism.common.tile.TileEntityBasicBlock;
 import mekanism.common.multiblock.IMultiblock;
+import mekanism.common.multiblock.IStructuralMultiblock;
 import mekanism.common.tile.TileEntityElectricBlock;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
@@ -346,6 +347,68 @@ public class BlockReactor extends BlockContainer implements IBlockCTM
 			if(tileEntity instanceof TileEntityBasicBlock)
 			{
 				((TileEntityBasicBlock)tileEntity).onAdded();
+			}
+
+			if(this == GeneratorsBlocks.FissionAssembly)
+			{
+				updateReactor(world, x, y, z);
+			}
+		}
+	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+	{
+		//The tile entity is only gone once BlockContainer is done, and the protocol would still count it
+		super.breakBlock(world, x, y, z, block, meta);
+
+		if(!world.isRemote && this == GeneratorsBlocks.FissionAssembly)
+		{
+			updateReactor(world, x, y, z);
+		}
+	}
+
+	/** Interior blocks do not notify the frame, so look for the reactor it belongs to and have it revalidate. */
+	private void updateReactor(World world, int x, int y, int z)
+	{
+		for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		{
+			for(int i = 1; i < 18; i++)
+			{
+				int cx = x+side.offsetX*i, cy = y+side.offsetY*i, cz = z+side.offsetZ*i;
+				Block neighbor = world.getBlock(cx, cy, cz);
+
+				if(neighbor == GeneratorsBlocks.Reactor)
+				{
+					TileEntity tile = world.getTileEntity(cx, cy, cz);
+
+					if(tile instanceof TileEntityFissionCasing)
+					{
+						TileEntityFissionCasing casing = (TileEntityFissionCasing)tile;
+
+						if(casing.structure != null)
+						{
+							casing.structure.didTick = false;
+						}
+
+						casing.update();
+						return;
+					}
+				}
+
+				if(neighbor != this && !world.isAirBlock(cx, cy, cz))
+				{
+					//Structural glass forwards to the multiblock it belongs to
+					TileEntity tile = world.getTileEntity(cx, cy, cz);
+
+					if(tile instanceof IStructuralMultiblock)
+					{
+						((IStructuralMultiblock)tile).update();
+						return;
+					}
+
+					break;
+				}
 			}
 		}
 	}

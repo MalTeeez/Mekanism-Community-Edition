@@ -3,22 +3,32 @@ package mekanism.gametest.fission;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mekanism.api.MekanismConfig.generators;
 import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
+import mekanism.common.RadiationHooks;
 import mekanism.generators.common.content.fission.SynchronizedFissionData;
 import mekanism.generators.common.tile.fission.TileEntityFissionCasing;
 import mekanism.generators.common.tile.fission.TileEntityFissionLogicAdapter;
 import mekanism.generators.common.tile.fission.TileEntityFissionLogicAdapter.FissionLogic;
 import mekanism.generators.common.tile.fission.TileEntityFissionPort;
 import mekanism.generators.common.tile.fission.TileEntityFissionPort.PortMode;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.Explosion;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.gtnewhorizons.horizonqa.api.GameTestHelper;
 import com.gtnewhorizons.horizonqa.api.annotation.GameTest;
 import com.gtnewhorizons.horizonqa.api.annotation.GameTestHolder;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @GameTestHolder("mekanism")
 public class FissionOperationTests
@@ -187,7 +197,7 @@ public class FissionOperationTests
 			.thenSucceed();
 	}
 
-	@GameTest(timeoutTicks = 20)
+	@GameTest(timeoutTicks = 20, batch = "noMeltdown")
 	public static void forceDisablesInsteadOfMeltingWhenMeltdownsAreOff(GameTestHelper helper)
 	{
 		boolean enabled = generators.fissionMeltdownsEnabled;
@@ -217,6 +227,79 @@ public class FissionOperationTests
 				helper.assertNotNull(casing.structure, "Reactor should not have exploded");
 				helper.assertBlockPresent(casing.getBlockType(), 5, 0, 0, 0);
 			})
+			.thenSucceed();
+	}
+
+	public static class ExplosionRecorder
+	{
+		public final List<Explosion> explosions = new ArrayList<Explosion>();
+
+		@SubscribeEvent
+		public void onExplosion(ExplosionEvent.Start event)
+		{
+			explosions.add(event.explosion);
+		}
+	}
+
+	@GameTest(timeoutTicks = 40, batch = "meltdown")
+	public static void meltsDownWhenOverdamaged(GameTestHelper helper)
+	{
+		//With u25core the meltdown is a scheduled series of explosions instead of the single one checked here
+		if(RadiationHooks.isLoaded())
+		{
+			helper.succeed();
+			return;
+		}
+
+		boolean enabled = generators.fissionMeltdownsEnabled;
+		double chance = generators.fissionMeltdownChance;
+		float radius = generators.fissionMeltdownRadius;
+		ExplosionRecorder recorder = new ExplosionRecorder();
+
+		MinecraftForge.EVENT_BUS.register(recorder);
+		helper.afterTest(() -> {
+			MinecraftForge.EVENT_BUS.unregister(recorder);
+			generators.fissionMeltdownsEnabled = enabled;
+			generators.fissionMeltdownChance = chance;
+			generators.fissionMeltdownRadius = radius;
+
+			//Destroyed blocks drop their items; the cell neighbours are at least 3 blocks away, so only the surroundings of this cell need clearing
+			AxisAlignedBB area = AxisAlignedBB.getBoundingBox(helper.getOriginX()-4, helper.getOriginY()-4, helper.getOriginZ()-4, helper.getOriginX()+7, helper.getOriginY()+8, helper.getOriginZ()+7);
+
+			for(Object item : helper.getWorld().getEntitiesWithinAABB(EntityItem.class, area))
+			{
+				((EntityItem)item).setDead();
+			}
+		});
+
+		generators.fissionMeltdownsEnabled = true;
+		generators.fissionMeltdownChance = 1;
+		generators.fissionMeltdownRadius = 2;
+
+		TileEntityFissionCasing casing = FissionTestUtil.form(helper, "FR");
+		SynchronizedFissionData data = casing.structure;
+
+		data.active = true;
+		data.temperature = SynchronizedFissionData.MIN_DAMAGE_TEMPERATURE+300;
+		data.damage = SynchronizedFissionData.MAX_DAMAGE;
+
+		helper.startSequence()
+			.thenWaitUntil(10, () -> helper.assertFalse(recorder.explosions.isEmpty(), "An overdamaged hot reactor should explode (damage " + data.damage + ", temp " + data.temperature + ")"))
+			.thenExecute(() -> {
+				Explosion explosion = recorder.explosions.get(0);
+
+				helper.assertEquals(1, recorder.explosions.size(), "A meltdown without u25core is a single explosion");
+				helper.assertEquals(2, explosion.explosionSize, 1e-6, "Explosion should use the configured meltdown radius");
+				helper.assertEquals(helper.getOriginX()+1.5, explosion.explosionX, 0.01, "Explosion X should be the reactor centre");
+				helper.assertEquals(helper.getOriginY()+2, explosion.explosionY, 0.01, "Explosion Y should be the reactor centre");
+				helper.assertEquals(helper.getOriginZ()+1.5, explosion.explosionZ, 0.01, "Explosion Z should be the reactor centre");
+				helper.assertFalse(data.active, "A melted-down reactor is switched off");
+				helper.assertFalse(data.forceDisable, "A meltdown is not a force-disable");
+				helper.assertEquals(generators.fissionPostMeltdownDamage, data.damage, 1e-9, "Damage is reset to the post-meltdown value");
+				helper.assertEquals(data.ambientTemp, data.temperature, 1e-9, "Temperature is reset to ambient");
+			})
+			.thenIdle(5)
+			.thenExecute(() -> helper.assertEquals(1, recorder.explosions.size(), "The reset reactor must not explode again"))
 			.thenSucceed();
 	}
 

@@ -1,6 +1,7 @@
 package mekanism.gametest.fission;
 
 import mekanism.api.MekanismConfig.generators;
+import mekanism.generators.common.GeneratorsBlocks;
 import mekanism.generators.common.tile.fission.TileEntityFissionCasing;
 import mekanism.generators.common.tile.fission.TileEntityFissionPort;
 
@@ -61,6 +62,62 @@ public class FissionFormationTests
 	public static void doesNotFormWithoutFuel(GameTestHelper helper)
 	{
 		assertNeverForms(helper, "R.", "reactor without any fuel assembly");
+	}
+
+	@GameTest(timeoutTicks = 20)
+	public static void formsWhenInteriorIsPlacedAfterTheShell(GameTestHelper helper)
+	{
+		//Five wide with air above and below the column, so no interior block touches the frame and no neighbour update reaches it
+		TileEntityFissionCasing casing = FissionTestUtil.shell(helper, 5, 6);
+
+		helper.startSequence()
+			.thenIdle(2)
+			.thenExecute(() -> {
+				helper.assertNull(casing.structure, "An empty shell must not form");
+				FissionTestUtil.interior(helper, 5, ".FR.");
+				helper.assertNotNull(casing.structure, "Placing the last interior block should form the reactor without waiting for a rescan");
+				helper.assertEquals(1, casing.structure.assemblies, "Fuel assembly count");
+			})
+			.thenSucceed();
+	}
+
+	@GameTest(timeoutTicks = 20)
+	public static void breakingAFuelAssemblyUpdatesTheStructure(GameTestHelper helper)
+	{
+		TileEntityFissionCasing casing = FissionTestUtil.form(helper, 5, ".FFR.");
+
+		helper.assertEquals(2, casing.structure.assemblies, "Test precondition: two assemblies");
+		helper.destroyBlock(2, 2, 2);
+		helper.assertNotNull(casing.structure, "The remaining fuel assembly is still a valid column under the rod");
+		helper.assertEquals(1, casing.structure.assemblies, "Fuel assembly count after breaking the lower assembly");
+		helper.assertEquals(6, casing.structure.surfaceArea, "Surface area of the remaining assembly");
+		helper.succeed();
+	}
+
+	@GameTest(timeoutTicks = 20)
+	public static void breakingTheTopFuelAssemblyUnformsTheReactor(GameTestHelper helper)
+	{
+		TileEntityFissionCasing casing = FissionTestUtil.form(helper, 5, ".FFR.");
+
+		helper.assertNotNull(casing.structure, "Test precondition: formed");
+		helper.destroyBlock(2, 3, 2);
+		helper.assertNull(casing.structure, "A gap between the fuel and the control rod should unform the reactor");
+		helper.succeed();
+	}
+
+	@GameTest(timeoutTicks = 20)
+	public static void breakingAndReplacingTheControlRod(GameTestHelper helper)
+	{
+		TileEntityFissionCasing casing = FissionTestUtil.form(helper, 5, ".FR.");
+
+		helper.assertNotNull(casing.structure, "Test precondition: formed");
+		helper.destroyBlock(2, 3, 2);
+		helper.assertNull(casing.structure, "Breaking the control rod should unform the reactor");
+
+		helper.setBlock(2, 3, 2, GeneratorsBlocks.FissionAssembly, 1);
+		helper.assertNotNull(casing.structure, "Placing the control rod back should form the reactor again");
+		helper.assertEquals(1, casing.structure.assemblies, "Fuel assembly count after re-forming");
+		helper.succeed();
 	}
 
 	private static void assertNeverForms(GameTestHelper helper, String column, String what)

@@ -123,12 +123,6 @@ public class TileEntityFissionCasing extends TileEntityMultiblock<SynchronizedFi
 					handleDamage();
 
 					MekanismUtils.saveChunk(this);
-
-					//Interior blocks do not notify the multiblock when removed, so periodically revalidate
-					if(ticker > 0 && ticker % 100 == 0)
-					{
-						update();
-					}
 				}
 			}
 		}
