@@ -348,10 +348,6 @@ public final class OreDictManager
 		} catch(Exception e) {}
 		
 		try {
-			FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismItems.Dust, 1, Resource.LEAD.ordinal()), StackUtils.size(OreDictionary.getOres("ingotLead").get(0), 1), 0.0F);
-		} catch(Exception e) {}
-		
-		try {
 			RecipeHandler.addCrusherRecipe(new ItemStack(Items.coal), StackUtils.size(OreDictionary.getOres("dustCoal").get(0), 1));
 		} catch(Exception e) {}
 		
@@ -388,6 +384,11 @@ public final class OreDictManager
 		for(ItemStack ore : OreDictionary.getOres("dustLithium"))
 		{
 			RecipeHandler.addChemicalOxidizerRecipe(StackUtils.size(ore, 1), new GasStack(GasRegistry.getGas("lithium"), 100));
+		}
+		
+		for(ItemStack ore : OreDictionary.getOres("ingotUranium"))
+		{
+			RecipeHandler.addEnrichmentChamberRecipe(StackUtils.size(ore, 1), new ItemStack(MekanismItems.YellowCakeUranium, 2));
 		}
 		
 		for(ItemStack ore : OreDictionary.getOres("dustObsidian"))

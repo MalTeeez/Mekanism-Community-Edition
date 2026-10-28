@@ -12,7 +12,8 @@ public enum Resource
 	COPPER("Copper"),
 	TIN("Tin"),
 	SILVER("Silver"),
-	LEAD("Lead");
+	LEAD("Lead"),
+	URANIUM("Uranium");
 
 	private String name;
 

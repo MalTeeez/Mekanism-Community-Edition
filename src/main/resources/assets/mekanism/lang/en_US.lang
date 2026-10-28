@@ -52,6 +52,11 @@ item.GaugeDropper.name=Gauge Dropper
 item.BioFuel.name=Biomass
 item.CraftingFormula.name=Crafting Formula
 item.RawOsmiumOre.name=Raw Osmium
+item.FluoriteGem.name=Fluorite Gem
+item.YellowCakeUranium.name=Yellow Cake Uranium
+item.PlutoniumPellet.name=Plutonium Pellet
+item.PoloniumPellet.name=Polonium Pellet
+item.ReprocessedFissileFragment.name=Reprocessed Fissile Fragment
 
 //Control Circuits
 item.BasicControlCircuit.name=Basic Control Circuit
@@ -163,6 +168,7 @@ tile.MachineBlock3.ResistiveHeater.name=Resistive Heater
 tile.MachineBlock3.FormulaicAssemblicator.name=Formulaic Assemblicator
 tile.MachineBlock3.FuelwoodHeater.name=Fuelwood Heater
 
+
 //Plastic
 tile.PlasticBlock.name=Plastic Block
 tile.SlickPlasticBlock.name=Slick Plastic Block
@@ -187,6 +193,9 @@ infuse.lead=Lead
 tile.OreBlock.OsmiumOre.name=Osmium Ore
 tile.OreBlock.CopperOre.name=Copper Ore
 tile.OreBlock.TinOre.name=Tin Ore
+tile.OreBlock.LeadOre.name=Lead Ore
+tile.OreBlock.UraniumOre.name=Uranium Ore
+tile.OreBlock.FluoriteOre.name=Fluorite Ore
 tile.DeepslateOreBlock.OsmiumOre.name=Deepslate Osmium Ore
 tile.DeepslateOreBlock.CopperOre.name=Deepslate Copper Ore
 tile.DeepslateOreBlock.TinOre.name=Deepslate Tin Ore
@@ -245,6 +254,12 @@ item.silverDust.name=Silver Dust
 item.leadDust.name=Lead Dust
 item.sulfurDust.name=Sulfur Dust
 item.lithiumDust.name=Lithium Dust
+item.fluoriteDust.name=Fluorite Dust
+item.uraniumDust.name=Uranium Dust
+item.dirtyUraniumDust.name=Dirty Uranium Dust
+item.uraniumClump.name=Uranium Clump
+item.uraniumShard.name=Uranium Shard
+item.uraniumCrystal.name=Uranium Crystal
 
 //Clumps
 item.ironClump.name=Iron Clump
@@ -291,6 +306,8 @@ item.steelIngot.name=Steel Ingot
 item.copperIngot.name=Copper Ingot
 item.tinIngot.name=Tin Ingot
 item.lazuliIngot.name=Lazuli Ingot
+item.leadIngot.name=Lead Ingot
+item.uraniumIngot.name=Uranium Ingot
 
 
 //Gasses
@@ -307,6 +324,15 @@ gas.liquidPlatinum=Liquid Platinum
 gas.liquidStone=Liquid Stone
 gas.ethene=Ethylene
 gas.sodium=Sodium
+gas.superheatedSodium=Superheated Sodium
+gas.fissileFuel=Fissile Fuel
+gas.nuclearWaste=Nuclear Waste
+gas.spentNuclearWaste=Spent Nuclear Waste
+gas.plutonium=Plutonium
+gas.polonium=Polonium
+gas.hydrofluoricAcid=Hydrofluoric Acid
+gas.uraniumOxide=Uranium Oxide
+gas.uraniumHexafluoride=Uranium Hexafluoride
 gas.brine=Gaseous Brine
 gas.deuterium=Deuterium
 gas.tritium=Tritium
@@ -326,6 +352,7 @@ gas.tin=Tin Slurry
 gas.silver=Silver Slurry
 gas.obsidian=Obsidian Slurry
 gas.lead=Lead Slurry
+gas.uranium=Uranium Slurry
 
 gas.cleanIron=Clean Iron Slurry
 gas.cleanGold=Clean Gold Slurry
@@ -336,6 +363,7 @@ gas.cleanTin=Clean Tin Slurry
 gas.cleanSilver=Clean Silver Slurry
 gas.cleanObsidian=Clean Obsidian Slurry
 gas.cleanLead=Clean Lead Slurry
+gas.cleanUranium=Clean Uranium Slurry
 
 //BC Fuel Gases
 gas.fuel=Vaporized Fuel
@@ -352,6 +380,13 @@ fluid.hydrogenChloride=Liquid Hydrogen Chloride
 fluid.brine=Brine
 fluid.ethene=Liquid Ethylene
 fluid.sodium=Liquid Sodium
+fluid.superheatedSodium=Liquid Superheated Sodium
+fluid.spentNuclearWaste=Liquid Spent Nuclear Waste
+fluid.plutonium=Liquid Plutonium
+fluid.polonium=Liquid Polonium
+fluid.hydrofluoricAcid=Liquid Hydrofluoric Acid
+fluid.uraniumOxide=Liquid Uranium Oxide
+fluid.uraniumHexafluoride=Liquid Uranium Hexafluoride
 fluid.heavyWater=Heavy Water
 fluid.lithium=Liquid Lithium
 fluid.deuterium=Liquid Deuterium
@@ -372,6 +407,7 @@ oregas.tin=Tin Ore
 oregas.silver=Silver Ore
 oregas.obsidian=Obsidian Ore
 oregas.lead=Lead Ore
+oregas.uranium=Uranium Ore
 
 //Tier names
 tier.Basic=Basic
@@ -573,6 +609,7 @@ gui.maxSteam=Max Steam
 gui.heatTransfer=Heat Transfer
 gui.superheaters=Superheaters
 gui.boilCapacity=Boil Capacity
+gui.superheatedSodium=Superheated Sodium
 gui.encodeFormula=Encode Formula
 gui.autoModeToggle=Turn Auto-Mode
 gui.craftSingle=Craft Single Item
@@ -898,6 +935,9 @@ tooltip.ReactorLogicAdapter=A block that can be used to allow basic monitoring o
 
 tooltip.OsmiumOre=A strong mineral that can be found at nearly any height in the world. It is known to have many uses in the construction of machinery.
 tooltip.CopperOre=A common, conductive material that can be used in the production of wires. Its ability to withstand high heats also makes it essential to advanced machinery.
+tooltip.LeadOre=A dense, soft metal that is excellent at absorbing radiation, making it essential for nuclear technology.
+tooltip.UraniumOre=A radioactive metal that can be processed into fuel for fission reactors.
+tooltip.FluoriteOre=A crystalline mineral that can be dissolved in sulfuric acid to produce hydrofluoric acid.
 tooltip.TinOre=A lightweight, yet sturdy, conductive material that is found slightly less commonly than Copper.
 tooltip.tile.DeepslateOreBlock.OsmiumOre=A strong mineral that can be found at nearly any height in the world. It is known to have many uses in the construction of machinery.
 tooltip.tile.DeepslateOreBlock.CopperOre=A common, conductive material that can be used in the production of wires. Its ability to withstand high heats also makes it essential to advanced machinery.

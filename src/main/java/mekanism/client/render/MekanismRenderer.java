@@ -106,6 +106,15 @@ public class MekanismRenderer
 			GasRegistry.getGas("ethene").setIcon(event.map.registerIcon("mekanism:liquid/LiquidEthene"));
 			GasRegistry.getGas("brine").setIcon(event.map.registerIcon("mekanism:liquid/LiquidBrine"));
 			GasRegistry.getGas("sodium").setIcon(event.map.registerIcon("mekanism:liquid/LiquidSodium"));
+			GasRegistry.getGas("superheatedSodium").setIcon(event.map.registerIcon("mekanism:liquid/LiquidSuperheatedSodium"));
+			GasRegistry.getGas("fissileFuel").setIcon(event.map.registerIcon("mekanism:liquid/LiquidFissileFuel"));
+			GasRegistry.getGas("nuclearWaste").setIcon(event.map.registerIcon("mekanism:liquid/LiquidNuclearWaste"));
+			GasRegistry.getGas("spentNuclearWaste").setIcon(event.map.registerIcon("mekanism:liquid/LiquidSpentNuclearWaste"));
+			GasRegistry.getGas("plutonium").setIcon(event.map.registerIcon("mekanism:liquid/LiquidPlutonium"));
+			GasRegistry.getGas("polonium").setIcon(event.map.registerIcon("mekanism:liquid/LiquidPolonium"));
+			GasRegistry.getGas("hydrofluoricAcid").setIcon(event.map.registerIcon("mekanism:liquid/LiquidHydrofluoricAcid"));
+			GasRegistry.getGas("uraniumOxide").setIcon(event.map.registerIcon("mekanism:liquid/LiquidUraniumOxide"));
+			GasRegistry.getGas("uraniumHexafluoride").setIcon(event.map.registerIcon("mekanism:liquid/LiquidUraniumHexafluoride"));
 			GasRegistry.getGas("deuterium").setIcon(event.map.registerIcon("mekanism:liquid/LiquidDeuterium"));
 			GasRegistry.getGas("tritium").setIcon(event.map.registerIcon("mekanism:liquid/LiquidTritium"));
 			GasRegistry.getGas("fusionFuelDT").setIcon(event.map.registerIcon("mekanism:liquid/LiquidDT"));

@@ -1006,6 +1006,10 @@ public class Mekanism
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismItems.OtherDust, 1, 1), new ItemStack(MekanismItems.Ingot, 1, 4), 0.0F);
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismItems.Dust, 1, Resource.COPPER.ordinal()), new ItemStack(MekanismItems.Ingot, 1, 5), 0.0F);
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismItems.Dust, 1, Resource.TIN.ordinal()), new ItemStack(MekanismItems.Ingot, 1, 6), 0.0F);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismBlocks.OreBlock, 1, 3), new ItemStack(MekanismItems.Ingot, 1, 8), 1.0F);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismBlocks.OreBlock, 1, 4), new ItemStack(MekanismItems.Ingot, 1, 9), 1.0F);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismItems.Dust, 1, Resource.LEAD.ordinal()), new ItemStack(MekanismItems.Ingot, 1, 8), 0.0F);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismItems.Dust, 1, Resource.URANIUM.ordinal()), new ItemStack(MekanismItems.Ingot, 1, 9), 0.0F);
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(MekanismItems.RawOsmiumOre), new ItemStack(MekanismItems.Ingot, 1, 1), 1.0F);
 
 		//Enrichment Chamber Recipes
@@ -1046,6 +1050,15 @@ public class Mekanism
 		//Osmium Compressor Recipes
 		RecipeHandler.addOsmiumCompressorRecipe(new ItemStack(Items.glowstone_dust), new ItemStack(MekanismItems.Ingot, 1, 3));
 		RecipeHandler.addOsmiumCompressorRecipe(new ItemStack(Items.dye,1, 4), new ItemStack(MekanismItems.Ingot, 1, 7));
+
+		//Fluorite Recipes
+		RecipeHandler.addEnrichmentChamberRecipe(new ItemStack(MekanismItems.OtherDust, 1, 7), new ItemStack(MekanismItems.FluoriteGem));
+		RecipeHandler.addEnrichmentChamberRecipe(new ItemStack(MekanismBlocks.OreBlock, 1, 5), new ItemStack(MekanismItems.FluoriteGem, 6));
+		RecipeHandler.addCrusherRecipe(new ItemStack(MekanismItems.FluoriteGem), new ItemStack(MekanismItems.OtherDust, 1, 7));
+
+		if (MekanismConfig.recipes.enableCombiner) {
+			RecipeHandler.addCombinerRecipe(new ItemStack(MekanismItems.OtherDust, 14, 7), new ItemStack(MekanismBlocks.OreBlock, 1, 5));
+		}
 
 		//Crusher Recipes
 		RecipeHandler.addCrusherRecipe(new ItemStack(Items.diamond), new ItemStack(MekanismItems.OtherDust, 1, 0));
@@ -1128,6 +1141,18 @@ public class Mekanism
 		RecipeHandler.addChemicalInfuserRecipe(new GasStack(GasRegistry.getGas("hydrogen"), 1), new GasStack(GasRegistry.getGas("chlorine"), 1), new GasStack(GasRegistry.getGas("hydrogenChloride"), 1));
 		RecipeHandler.addChemicalInfuserRecipe(new GasStack(GasRegistry.getGas("deuterium"), 1), new GasStack(GasRegistry.getGas("tritium"), 1), new GasStack(GasRegistry.getGas("fusionFuelDT"), 2));
 
+		RecipeHandler.addChemicalInfuserRecipe(new GasStack(GasRegistry.getGas("hydrofluoricAcid"), 1), new GasStack(GasRegistry.getGas("uraniumOxide"), 1), new GasStack(GasRegistry.getGas("uraniumHexafluoride"), 2));
+
+		//Chemical Oxidizer Recipes
+		RecipeHandler.addChemicalOxidizerRecipe(new ItemStack(MekanismItems.YellowCakeUranium), new GasStack(GasRegistry.getGas("uraniumOxide"), 250));
+		RecipeHandler.addChemicalOxidizerRecipe(new ItemStack(MekanismItems.ReprocessedFissileFragment), new GasStack(GasRegistry.getGas("fissileFuel"), 2000));
+
+		//Chemical Dissolution Chamber Recipes
+		RecipeHandler.addChemicalDissolutionChamberRecipe(new ItemStack(MekanismItems.FluoriteGem), new GasStack(GasRegistry.getGas("hydrofluoricAcid"), 1000));
+
+		//Chemical Injection Chamber Recipes
+		RecipeHandler.addChemicalInjectionChamberRecipe(new ItemStack(MekanismItems.PlutoniumPellet), "hydrogenChloride", new ItemStack(MekanismItems.ReprocessedFissileFragment, 4));
+
 		//Electrolytic Separator Recipes
 		RecipeHandler.addElectrolyticSeparatorRecipe(FluidRegistry.getFluidStack("water", 2), 2 * general.FROM_H2, new GasStack(GasRegistry.getGas("hydrogen"), 2), new GasStack(GasRegistry.getGas("oxygen"), 1));
 		RecipeHandler.addElectrolyticSeparatorRecipe(FluidRegistry.getFluidStack("brine", 10), 2 * general.FROM_H2, new GasStack(GasRegistry.getGas("sodium"), 1), new GasStack(GasRegistry.getGas("chlorine"), 1));
@@ -1174,6 +1199,18 @@ public class Mekanism
 				new ItemStack(MekanismItems.Substrate, 8), new GasStack(GasRegistry.getGas("oxygen"), 10),
 				200,
 				400
+		);
+		RecipeHandler.addPRCRecipe(
+				new ItemStack(MekanismItems.OtherDust, 1, 7), new FluidStack(FluidRegistry.WATER, 1000), new GasStack(GasRegistry.getGas("plutonium"), 1000),
+				new ItemStack(MekanismItems.PlutoniumPellet), new GasStack(GasRegistry.getGas("spentNuclearWaste"), 1000),
+				0,
+				100
+		);
+		RecipeHandler.addPRCRecipe(
+				new ItemStack(MekanismItems.OtherDust, 1, 7), new FluidStack(FluidRegistry.WATER, 1000), new GasStack(GasRegistry.getGas("polonium"), 1000),
+				new ItemStack(MekanismItems.PoloniumPellet), new GasStack(GasRegistry.getGas("spentNuclearWaste"), 1000),
+				0,
+				100
 		);
 		//Solar Neutron Activator Recipes
 		RecipeHandler.addSolarNeutronRecipe(new GasStack(GasRegistry.getGas("lithium"), 1), new GasStack(GasRegistry.getGas("tritium"), 1));
@@ -1277,6 +1314,12 @@ public class Mekanism
 		OreDictionary.registerOre("ingotCopper", new ItemStack(MekanismItems.Ingot, 1, 5));
 		OreDictionary.registerOre("ingotTin", new ItemStack(MekanismItems.Ingot, 1, 6));
 		OreDictionary.registerOre("ingotRefinedLapis", new ItemStack(MekanismItems.Ingot, 1, 7));
+		OreDictionary.registerOre("ingotLead", new ItemStack(MekanismItems.Ingot, 1, 8));
+		OreDictionary.registerOre("ingotUranium", new ItemStack(MekanismItems.Ingot, 1, 9));
+		OreDictionary.registerOre("dustFluorite", new ItemStack(MekanismItems.OtherDust, 1, 7));
+		OreDictionary.registerOre("gemFluorite", MekanismItems.FluoriteGem);
+		OreDictionary.registerOre("pelletPlutonium", MekanismItems.PlutoniumPellet);
+		OreDictionary.registerOre("pelletPolonium", MekanismItems.PoloniumPellet);
 
 		OreDictionary.registerOre("block" + mekanismMaterial, new ItemStack(MekanismBlocks.BasicBlock, 1, 0));
 		OreDictionary.registerOre("blockRawOsmium", new ItemStack(MekanismBlocks.BasicBlock2, 1, 10));
@@ -1300,6 +1343,9 @@ public class Mekanism
 		OreDictionary.registerOre("ore" + mekanismMaterial, new ItemStack(MekanismBlocks.OreBlock, 1, 0));
 		OreDictionary.registerOre("oreCopper", new ItemStack(MekanismBlocks.OreBlock, 1, 1));
 		OreDictionary.registerOre("oreTin", new ItemStack(MekanismBlocks.OreBlock, 1, 2));
+		OreDictionary.registerOre("oreLead", new ItemStack(MekanismBlocks.OreBlock, 1, 3));
+		OreDictionary.registerOre("oreUranium", new ItemStack(MekanismBlocks.OreBlock, 1, 4));
+		OreDictionary.registerOre("oreFluorite", new ItemStack(MekanismBlocks.OreBlock, 1, 5));
 		OreDictionary.registerOre("ore" + mekanismMaterial, new ItemStack(MekanismBlocks.DeepslateOreBlock, 1, 0));
 		OreDictionary.registerOre("oreDeepslateOsmium", new ItemStack(MekanismBlocks.DeepslateOreBlock, 1, 0));
 		OreDictionary.registerOre("oreCopper", new ItemStack(MekanismBlocks.DeepslateOreBlock, 1, 1));
@@ -1428,6 +1474,15 @@ public class Mekanism
 		GasRegistry.register(new Gas("liquidStone").setVisible(false));
 		GasRegistry.register(new Gas("ethene").registerFluid());
 		GasRegistry.register(new Gas("sodium").registerFluid());
+		GasRegistry.register(new Gas("superheatedSodium").registerFluid());
+		GasRegistry.register(new Gas("fissileFuel").registerFluid());
+		GasRegistry.register(new Gas("nuclearWaste").registerFluid());
+		GasRegistry.register(new Gas("spentNuclearWaste").registerFluid());
+		GasRegistry.register(new Gas("plutonium").registerFluid());
+		GasRegistry.register(new Gas("polonium").registerFluid());
+		GasRegistry.register(new Gas("hydrofluoricAcid").registerFluid());
+		GasRegistry.register(new Gas("uraniumOxide").registerFluid());
+		GasRegistry.register(new Gas("uraniumHexafluoride").registerFluid());
 		GasRegistry.register(new Gas("brine").registerFluid());
 		GasRegistry.register(new Gas("deuterium")).registerFluid();
 		GasRegistry.register(new Gas("tritium")).registerFluid();

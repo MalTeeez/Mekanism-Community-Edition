@@ -21,6 +21,9 @@ import java.util.List;
  * 0: Osmium Ore
  * 1: Copper Ore
  * 2: Tin Ore
+ * 3: Lead Ore
+ * 4: Uranium Ore
+ * 5: Fluorite Ore
  * @author AidanBrady
  *
  */
@@ -77,7 +80,13 @@ public class ItemBlockOre extends ItemBlock
 				name = "TinOre";
 				break;
 			case 3:
-				name = "DeepslateOsmiumOre";
+				name = "LeadOre";
+				break;
+			case 4:
+				name = "UraniumOre";
+				break;
+			case 5:
+				name = "FluoriteOre";
 				break;
 			default:
 				name = "Unknown";

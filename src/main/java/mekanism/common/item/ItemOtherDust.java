@@ -14,7 +14,7 @@ public class ItemOtherDust extends ItemMekanism
 	
 	public static String[] subtypes = {"Diamond", "Steel", "null", 
 									  "Sulfur", "Lithium", "RefinedObsidian",
-									  "Obsidian"};
+									  "Obsidian", "Fluorite"};
 	
 	public ItemOtherDust()
 	{

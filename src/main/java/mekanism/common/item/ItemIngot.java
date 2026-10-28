@@ -14,7 +14,8 @@ public class ItemIngot extends ItemMekanism
 
 	public static String[] en_USNames = {"Obsidian", "Osmium", "Bronze", 
 										"Glowstone", "Steel", "Copper", 
-										"Tin", "Lazuli"};
+										"Tin", "Lazuli", "Lead",
+										"Uranium"};
 
 	public ItemIngot()
 	{
@@ -25,7 +26,7 @@ public class ItemIngot extends ItemMekanism
 	@Override
 	public void registerIcons(IIconRegister register)
 	{
-		for(int i = 0; i <= 7; i++)
+		for(int i = 0; i < en_USNames.length; i++)
 		{
 			icons[i] = register.registerIcon("mekanism:" + en_USNames[i] + "Ingot");
 		}
@@ -40,7 +41,7 @@ public class ItemIngot extends ItemMekanism
 	@Override
 	public void getSubItems(Item item, CreativeTabs tabs, List itemList)
 	{
-		for(int counter = 0; counter <= 7; counter++)
+		for(int counter = 0; counter < en_USNames.length; counter++)
 		{
 			itemList.add(new ItemStack(item, 1, counter));
 		}

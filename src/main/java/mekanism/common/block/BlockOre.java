@@ -1,9 +1,11 @@
 package mekanism.common.block;
 
 import java.util.List;
+import java.util.Random;
 
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismBlocks;
+import mekanism.common.MekanismItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -11,6 +13,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -19,6 +23,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 0: Osmium Ore
  * 1: Copper Ore
  * 2: Tin Ore
+ * 3: Lead Ore
+ * 4: Uranium Ore
+ * 5: Fluorite Ore
  * @author AidanBrady
  *
  */
@@ -43,6 +50,9 @@ public class BlockOre extends Block
 			icons[0] = register.registerIcon("mekanism:OsmiumOre");
 			icons[1] = register.registerIcon("mekanism:CopperOre");
 			icons[2] = register.registerIcon("mekanism:TinOre");
+			icons[3] = register.registerIcon("mekanism:LeadOre");
+			icons[4] = register.registerIcon("mekanism:UraniumOre");
+			icons[5] = register.registerIcon("mekanism:FluoriteOre");
 		}
 		if(this == MekanismBlocks.DeepslateOreBlock) {
 			icons[0] = register.registerIcon("mekanism:DeepslateOsmiumOre");
@@ -59,9 +69,35 @@ public class BlockOre extends Block
 	}
 
 	@Override
+	public Item getItemDropped(int meta, Random random, int fortune)
+	{
+		return meta == 5 ? MekanismItems.FluoriteGem : super.getItemDropped(meta, random, fortune);
+	}
+
+	@Override
+	public int quantityDropped(int meta, int fortune, Random random)
+	{
+		if(meta != 5)
+		{
+			return 1;
+		}
+
+		//Upstream: 2-4 gems with the vanilla ore fortune bonus
+		int bonus = fortune > 0 ? Math.max(0, random.nextInt(fortune+2)-1) : 0;
+
+		return (2+random.nextInt(3))*(bonus+1);
+	}
+
+	@Override
 	public int damageDropped(int i)
 	{
-		return i;
+		return i == 5 ? 0 : i;
+	}
+
+	@Override
+	public int getExpDrop(IBlockAccess world, int meta, int fortune)
+	{
+		return meta == 5 ? MathHelper.getRandomIntegerInRange(new Random(), 1, 4) : 0;
 	}
 
 	@Override
@@ -71,5 +107,12 @@ public class BlockOre extends Block
 		list.add(new ItemStack(item, 1, 0));
 		list.add(new ItemStack(item, 1, 1));
 		list.add(new ItemStack(item, 1, 2));
+
+		if(this == MekanismBlocks.OreBlock)
+		{
+			list.add(new ItemStack(item, 1, 3));
+			list.add(new ItemStack(item, 1, 4));
+			list.add(new ItemStack(item, 1, 5));
+		}
 	}
 }

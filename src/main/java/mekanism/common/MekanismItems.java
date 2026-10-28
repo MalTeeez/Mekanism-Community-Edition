@@ -64,6 +64,11 @@ public class MekanismItems
 	public static final ItemFreeRunners FreeRunners = (ItemFreeRunners)new ItemFreeRunners().setUnlocalizedName("FreeRunners");
 	public static final Item Balloon = new ItemBalloon().setUnlocalizedName("Balloon");
 	public static final Item RawOsmiumOre = new ItemMekanism().setUnlocalizedName("RawOsmiumOre");
+	public static final Item FluoriteGem = new ItemMekanism().setUnlocalizedName("FluoriteGem");
+	public static final Item YellowCakeUranium = new ItemMekanism().setUnlocalizedName("YellowCakeUranium");
+	public static final Item PlutoniumPellet = new ItemMekanism().setUnlocalizedName("PlutoniumPellet");
+	public static final Item PoloniumPellet = new ItemMekanism().setUnlocalizedName("PoloniumPellet");
+	public static final Item ReprocessedFissileFragment = new ItemMekanism().setUnlocalizedName("ReprocessedFissileFragment");
 
 	//Multi-ID Items
 	public static final Item OtherDust = new ItemOtherDust();
@@ -143,6 +148,11 @@ public class MekanismItems
 		GameRegistry.registerItem(TierInstaller, "FactoryInstaller");
 		GameRegistry.registerItem(OtherDust, "OtherDust");
 		GameRegistry.registerItem(RawOsmiumOre, "RawOsmiumOre");
+		GameRegistry.registerItem(FluoriteGem, "FluoriteGem");
+		GameRegistry.registerItem(YellowCakeUranium, "YellowCakeUranium");
+		GameRegistry.registerItem(PlutoniumPellet, "PlutoniumPellet");
+		GameRegistry.registerItem(PoloniumPellet, "PoloniumPellet");
+		GameRegistry.registerItem(ReprocessedFissileFragment, "ReprocessedFissileFragment");
 
 		FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluid("brine"), new ItemStack(BrineBucket), FluidContainerRegistry.EMPTY_BUCKET);
 		FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluid("lithium"), new ItemStack(LithiumBucket), FluidContainerRegistry.EMPTY_BUCKET);
