@@ -1,5 +1,15 @@
 // Add any additional repositories for your dependencies here.
 
 repositories {
-
+    exclusiveContent {
+        forRepository {
+            ivy {
+                name = 'U25Core releases'
+                url = 'https://github.com/MalTeeez/u25core/releases/download/'
+                patternLayout { artifact '[revision]/[module]-[revision](-[classifier]).[ext]' }
+                metadataSources { artifact() }
+            }
+        }
+        filter { includeModule('MalTeeez', 'u25core') }
+    }
 }

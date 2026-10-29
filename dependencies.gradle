@@ -51,7 +51,5 @@ dependencies {
     compileOnly(rfg.deobf(files("libs/MineFactoryReloaded-[1.7.10]2.8.1-174.jar")))
     compileOnly(rfg.deobf(files("libs/RefinedRelocation-mc1.7.10-1.1.34.jar")))
     compileOnly(rfg.deobf(files("libs/ComputerCraft1.75.jar")))
-    // ponytail: local u25core API build until u25core publishes an -api release tag
-    compileOnly(files("libs/u25core-api.jar"))
-
+    compileOnly(group: 'MalTeeez', name: 'u25core', version: '1.5', classifier: 'api')
 }
