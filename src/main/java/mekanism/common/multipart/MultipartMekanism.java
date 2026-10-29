@@ -171,12 +171,15 @@ public class MultipartMekanism implements IPartFactory
 
 			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(MekanismBlocks.BasicBlock, 1, i));
 			
-			if(!MachineType.get(MACHINE_BLOCK_1, i).hasModel)
+			MachineType machineBlock1 = MachineType.get(MACHINE_BLOCK_1, i);
+			MachineType machineBlock2 = MachineType.get(MACHINE_BLOCK_2, i);
+
+			if(machineBlock1 != null && !machineBlock1.hasModel)
 			{
 				FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(MekanismBlocks.MachineBlock, 1, i));
 			}
 			
-			if(!MachineType.get(MACHINE_BLOCK_2, i).hasModel)
+			if(machineBlock2 != null && !machineBlock2.hasModel)
 			{
 				FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(MekanismBlocks.MachineBlock2, 1, i));
 			}

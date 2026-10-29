@@ -52,6 +52,13 @@ public class ItemControlCircuit extends ItemMekanism
 	@Override
 	public String getUnlocalizedName(ItemStack item)
 	{
-		return "item." + BaseTier.values()[item.getItemDamage()].getName() + "ControlCircuit";
+		int damage = item.getItemDamage();
+		
+		if(damage < 0 || damage >= BaseTier.values().length)
+		{
+			return "Invalid";
+		}
+		
+		return "item." + BaseTier.values()[damage].getName() + "ControlCircuit";
 	}
 }

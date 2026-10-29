@@ -163,6 +163,11 @@ public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpec
 	{
 		MachineType type = MachineType.get(itemstack);
 
+		if(type == null)
+		{
+			return;
+		}
+
 		if(!MekKeyHandler.getIsKeyPressed(MekanismKeyHandler.sneakKey))
 		{
 			if(type == MachineType.FLUID_TANK)
@@ -694,7 +699,9 @@ public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpec
 	@Override
 	public double getEnergy(ItemStack itemStack)
 	{
-		if(itemStack.stackTagCompound == null || !MachineType.get(itemStack).isElectric)
+		MachineType type = MachineType.get(itemStack);
+
+		if(type == null || !type.isElectric || itemStack.stackTagCompound == null)
 		{
 			return 0;
 		}
@@ -705,7 +712,9 @@ public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpec
 	@Override
 	public void setEnergy(ItemStack itemStack, double amount)
 	{
-		if(!MachineType.get(itemStack).isElectric)
+		MachineType type = MachineType.get(itemStack);
+
+		if(type == null || !type.isElectric)
 		{
 			return;
 		}
@@ -722,7 +731,14 @@ public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpec
 	@Override
 	public double getMaxEnergy(ItemStack itemStack)
 	{
-		return MekanismUtils.getMaxEnergy(itemStack, MachineType.get(Block.getBlockFromItem(itemStack.getItem()), itemStack.getItemDamage()).baseEnergy);
+		MachineType type = MachineType.get(Block.getBlockFromItem(itemStack.getItem()), itemStack.getItemDamage());
+
+		if(type == null)
+		{
+			return 0;
+		}
+
+		return MekanismUtils.getMaxEnergy(itemStack, type.baseEnergy);
 	}
 
 	@Override
@@ -734,7 +750,9 @@ public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpec
 	@Override
 	public boolean canReceive(ItemStack itemStack)
 	{
-		return MachineType.get(itemStack).isElectric;
+		MachineType type = MachineType.get(itemStack);
+
+		return type != null && type.isElectric;
 	}
 
 	@Override

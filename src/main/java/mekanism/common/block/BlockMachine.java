@@ -637,6 +637,11 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 		{
 			MachineType type = MachineType.get(blockType, metadata);
 
+			if(type == null)
+			{
+				return false;
+			}
+
 			switch(type)
 			{
 				case PERSONAL_CHEST:
@@ -1090,6 +1095,11 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 	{
 		MachineType type = MachineType.get(blockType, world.getBlockMetadata(x, y, z));
 
+		if(type == null)
+		{
+			return false;
+		}
+
 		switch(type)
 		{
 			case LASER_AMPLIFIER:
@@ -1161,6 +1171,11 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
 	{
 		MachineType type = MachineType.get(blockType, world.getBlockMetadata(x, y, z));
+
+		if(type == null)
+		{
+			return true;
+		}
 
 		switch(type)
 		{
@@ -1524,6 +1539,8 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 	@Override
 	public boolean shouldRenderBlock(IBlockAccess world, int x, int y, int z, int meta)
 	{
-		return !MachineType.get(this, meta).hasModel;
+		MachineType type = MachineType.get(this, meta);
+
+		return type == null || !type.hasModel;
 	}
 }

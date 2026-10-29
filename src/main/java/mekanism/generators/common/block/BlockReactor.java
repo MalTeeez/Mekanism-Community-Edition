@@ -281,8 +281,13 @@ public class BlockReactor extends BlockContainer implements IBlockCTM, BlockMode
 		{
 			if(!entityplayer.isSneaking())
 			{
-				entityplayer.openGui(MekanismGenerators.instance, ReactorBlockType.get(this, metadata).guiId, world, x, y, z);
-				return true;
+				ReactorBlockType type = ReactorBlockType.get(this, metadata);
+
+				if(type != null)
+				{
+					entityplayer.openGui(MekanismGenerators.instance, type.guiId, world, x, y, z);
+					return true;
+				}
 			}
 		}
 		
@@ -290,8 +295,13 @@ public class BlockReactor extends BlockContainer implements IBlockCTM, BlockMode
 		{
 			if(!entityplayer.isSneaking())
 			{
-				entityplayer.openGui(MekanismGenerators.instance, ReactorBlockType.get(this, metadata).guiId, world, x, y, z);
-				return true;
+				ReactorBlockType type = ReactorBlockType.get(this, metadata);
+
+				if(type != null)
+				{
+					entityplayer.openGui(MekanismGenerators.instance, type.guiId, world, x, y, z);
+					return true;
+				}
 			}
 		}
 
@@ -520,6 +530,11 @@ public class BlockReactor extends BlockContainer implements IBlockCTM, BlockMode
 	{
 		ReactorBlockType type = ReactorBlockType.get(this, world.getBlockMetadata(x, y, z));
 
+		if(type == null)
+		{
+			return false;
+		}
+
 		switch(type)
 		{
 			case FRAME:
@@ -538,6 +553,11 @@ public class BlockReactor extends BlockContainer implements IBlockCTM, BlockMode
 	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side)
 	{
 		ReactorBlockType type = ReactorBlockType.get(this, world.getBlockMetadata(x, y, z));
+
+		if(type == null)
+		{
+			return false;
+		}
 
 		switch(type)
 		{

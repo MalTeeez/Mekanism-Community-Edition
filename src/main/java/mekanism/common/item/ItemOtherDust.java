@@ -59,6 +59,13 @@ public class ItemOtherDust extends ItemMekanism
 	@Override
 	public String getUnlocalizedName(ItemStack item)
 	{
-		return "item." + subtypes[item.getItemDamage()].toLowerCase() + "Dust";
+		int damage = item.getItemDamage();
+		
+		if(damage < 0 || damage >= subtypes.length)
+		{
+			return "Invalid";
+		}
+		
+		return "item." + subtypes[damage].toLowerCase() + "Dust";
 	}
 }

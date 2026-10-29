@@ -43,7 +43,10 @@ public class ItemBlockReactor extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
-		return getUnlocalizedName() + "." + ReactorBlockType.get(itemstack).name;
+		ReactorBlockType type = ReactorBlockType.get(itemstack);
+
+		//Metadata without a type (e.g. a wildcard stack that MineTweaker/NEI asks a display name for) has no name to report
+		return getUnlocalizedName() + "." + (type != null ? type.name : "Unknown");
 	}
 
 	@Override
@@ -51,6 +54,11 @@ public class ItemBlockReactor extends ItemBlock
 	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
 	{
 		ReactorBlockType type = ReactorBlockType.get(itemstack);
+
+		if(type == null)
+		{
+			return;
+		}
 
 		if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 		{

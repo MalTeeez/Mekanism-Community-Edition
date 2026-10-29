@@ -146,6 +146,11 @@ public class ItemBlockBasic extends ItemBlock implements IEnergizedItem, ITierIt
 	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
 	{
 		BasicType type = BasicType.get(itemstack);
+
+		if(type == null)
+		{
+			return;
+		}
 		
 		if(type.hasDescription)
 		{

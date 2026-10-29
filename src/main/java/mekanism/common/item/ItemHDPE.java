@@ -47,7 +47,14 @@ public class ItemHDPE extends ItemMekanism
 	@Override
 	public String getUnlocalizedName(ItemStack item)
 	{
-		return "item." + PlasticItem.values()[item.getItemDamage()].getName();
+		int damage = item.getItemDamage();
+		
+		if(damage < 0 || damage >= PlasticItem.values().length)
+		{
+			return "Invalid";
+		}
+		
+		return "item." + PlasticItem.values()[damage].getName();
 	}
 
 	public enum PlasticItem

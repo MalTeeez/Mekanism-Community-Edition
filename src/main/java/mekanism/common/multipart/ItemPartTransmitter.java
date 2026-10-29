@@ -47,7 +47,14 @@ public class ItemPartTransmitter extends JItemMultiPart
 	@Override
 	public TMultiPart newPart(ItemStack stack, EntityPlayer player, World world, BlockCoord coord, int face, Vector3 vecHit)
 	{
-		TransmitterType type = TransmitterType.values()[stack.getItemDamage()];
+		int damage = stack.getItemDamage();
+
+		if(damage < 0 || damage >= TransmitterType.values().length)
+		{
+			return null;
+		}
+
+		TransmitterType type = TransmitterType.values()[damage];
 
 		if(type.getTransmission() != TransmissionType.ITEM)
 		{
@@ -79,6 +86,11 @@ public class ItemPartTransmitter extends JItemMultiPart
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
 	{
+		if(itemstack.getItemDamage() < 0 || itemstack.getItemDamage() >= TransmitterType.values().length)
+		{
+			return;
+		}
+
 		if(!MekKeyHandler.getIsKeyPressed(MekanismKeyHandler.sneakKey))
 		{
 			TransmissionType transmission = TransmitterType.values()[itemstack.getItemDamage()].getTransmission();
@@ -181,6 +193,13 @@ public class ItemPartTransmitter extends JItemMultiPart
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return getUnlocalizedName() + "." + TransmitterType.values()[stack.getItemDamage()].getName();
+		int damage = stack.getItemDamage();
+		
+		if(damage < 0 || damage >= TransmitterType.values().length)
+		{
+			return "Invalid";
+		}
+		
+		return getUnlocalizedName() + "." + TransmitterType.values()[damage].getName();
 	}
 }

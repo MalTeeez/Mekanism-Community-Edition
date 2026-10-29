@@ -202,6 +202,12 @@ public interface IFactory
 			if(cacheTile == null)
 			{
 				MachineType type = MachineType.get(Block.getBlockFromItem(getStack().getItem()), getStack().getItemDamage());
+
+				if(type == null)
+				{
+					return null;
+				}
+
 				cacheTile = (TileEntityAdvancedElectricMachine)type.create();
 			}
 

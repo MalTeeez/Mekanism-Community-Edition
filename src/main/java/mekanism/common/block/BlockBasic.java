@@ -928,6 +928,12 @@ public class BlockBasic extends Block implements IBlockCTM, ICustomBlockIcon
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player)
 	{
 		BasicType type = BasicType.get(this, world.getBlockMetadata(x, y, z));
+
+		if(type == null)
+		{
+			return super.getPickBlock(target, world, x, y, z, player);
+		}
+
 		ItemStack ret = new ItemStack(this, 1, type.meta);
 
 		if(type == BasicType.BIN)

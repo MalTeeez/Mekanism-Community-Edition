@@ -34,7 +34,7 @@ public class ItemTierInstaller extends ItemMekanism
 		}
 		
 		TileEntity tile = world.getTileEntity(x, y, z);
-		BaseTier tier = BaseTier.values()[stack.getItemDamage()];
+		BaseTier tier = BaseTier.values()[Math.max(0, Math.min(stack.getItemDamage(), BaseTier.values().length - 1))];
 		
 		if(tile instanceof ITierUpgradeable && MekanismConfig.machines.isEnabled("Factory"))
 		{
@@ -92,6 +92,13 @@ public class ItemTierInstaller extends ItemMekanism
 	@Override
 	public String getUnlocalizedName(ItemStack item)
 	{
-		return "item." + BaseTier.values()[item.getItemDamage()].getName().toLowerCase() + "TierInstaller";
+		int damage = item.getItemDamage();
+		
+		if(damage < 0 || damage >= BaseTier.values().length)
+		{
+			return "Invalid";
+		}
+		
+		return "item." + BaseTier.values()[damage].getName().toLowerCase() + "TierInstaller";
 	}
 }

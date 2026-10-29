@@ -299,7 +299,14 @@ public class GuiUpgradeManagement extends GuiMekanism
 			
 			if(xAxis >= 6 && xAxis <= 20 && yAxis >= 6 && yAxis <= 20)
 			{
-				int guiId = MachineType.get(tile.getBlockType(), tile.getBlockMetadata()).guiId;
+				MachineType machine = MachineType.get(tile.getBlockType(), tile.getBlockMetadata());
+
+				if(machine == null)
+				{
+					return;
+				}
+
+				int guiId = machine.guiId;
                 SoundHandler.playSound("gui.button.press");
 				Mekanism.packetHandler.sendToServer(new SimpleGuiMessage(Coord4D.get(tile), 0, guiId));
 			}

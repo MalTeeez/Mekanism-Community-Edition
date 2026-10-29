@@ -48,7 +48,7 @@ public class ItemDirtyDust extends ItemMekanism
 	@Override
 	public String getUnlocalizedName(ItemStack item)
 	{
-		if(item.getItemDamage() <= Resource.values().length-1)
+		if(item.getItemDamage() >= 0 && item.getItemDamage() <= Resource.values().length-1)
 		{
 			return "item.dirty" + Resource.values()[item.getItemDamage()].getName() + "Dust";
 		}

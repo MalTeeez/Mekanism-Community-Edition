@@ -429,7 +429,7 @@ public class ItemRenderingHandler implements IItemRenderer
 			GL11.glTranslated(-0.5, -0.5, -0.5);
 			MekanismRenderer.blendOn();
 			GL11.glDisable(GL11.GL_CULL_FACE);
-			RenderPartTransmitter.getInstance().renderItem(TransmitterType.values()[item.getItemDamage()]);
+			RenderPartTransmitter.getInstance().renderItem(TransmitterType.values()[Math.max(0, Math.min(item.getItemDamage(), TransmitterType.values().length - 1))]);
 			GL11.glEnable(GL11.GL_CULL_FACE);
 			MekanismRenderer.blendOff();
 			GL11.glPopMatrix();

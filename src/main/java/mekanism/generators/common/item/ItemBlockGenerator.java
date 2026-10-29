@@ -80,7 +80,7 @@ public class ItemBlockGenerator extends ItemBlock implements IEnergizedItem, ISp
 	{
 		GeneratorType type = GeneratorType.getFromMetadata(stack.getItemDamage());
 		
-		if(type.maxEnergy == -1)
+		if(type == null || type.maxEnergy == -1)
 		{
 			return 64;
 		}
@@ -117,7 +117,12 @@ public class ItemBlockGenerator extends ItemBlock implements IEnergizedItem, ISp
 	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
 	{
 		GeneratorType type = GeneratorType.getFromMetadata(itemstack.getItemDamage());
-		
+
+		if(type == null)
+		{
+			return;
+		}
+
 		if(type.maxEnergy > -1)
 		{
 			if(!MekKeyHandler.getIsKeyPressed(MekanismKeyHandler.sneakKey))
@@ -411,7 +416,9 @@ public class ItemBlockGenerator extends ItemBlock implements IEnergizedItem, ISp
 	@Override
 	public double getMaxEnergy(ItemStack itemStack)
 	{
-		return GeneratorType.getFromMetadata(itemStack.getItemDamage()).maxEnergy;
+		GeneratorType type = GeneratorType.getFromMetadata(itemStack.getItemDamage());
+
+		return type != null ? type.maxEnergy : 0;
 	}
 
 	@Override
@@ -429,7 +436,9 @@ public class ItemBlockGenerator extends ItemBlock implements IEnergizedItem, ISp
 	@Override
 	public boolean canSend(ItemStack itemStack)
 	{
-		return GeneratorType.getFromMetadata(itemStack.getItemDamage()).maxEnergy != -1;
+		GeneratorType type = GeneratorType.getFromMetadata(itemStack.getItemDamage());
+
+		return type != null && type.maxEnergy != -1;
 	}
 
 	@Override
@@ -544,7 +553,7 @@ public class ItemBlockGenerator extends ItemBlock implements IEnergizedItem, ISp
 	{
 		GeneratorType type = GeneratorType.getFromMetadata(stack.getItemDamage());
 		
-		return type.hasModel;
+		return type != null && type.hasModel;
 	}
 	
 	@Override

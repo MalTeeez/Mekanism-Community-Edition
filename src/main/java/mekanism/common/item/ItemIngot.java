@@ -50,6 +50,13 @@ public class ItemIngot extends ItemMekanism
 	@Override
 	public String getUnlocalizedName(ItemStack item)
 	{
-		return "item." + en_USNames[item.getItemDamage()].toLowerCase() + "Ingot";
+		int damage = item.getItemDamage();
+		
+		if(damage < 0 || damage >= en_USNames.length)
+		{
+			return "Invalid";
+		}
+		
+		return "item." + en_USNames[damage].toLowerCase() + "Ingot";
 	}
 }

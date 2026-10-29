@@ -134,7 +134,9 @@ public class BlockGenerator extends BlockContainer implements ISpecialBounds, IB
 	@Override
 	public boolean shouldRenderBlock(IBlockAccess world, int x, int y, int z, int meta)
 	{
-		return !GeneratorType.getFromMetadata(meta).hasModel;
+		GeneratorType type = GeneratorType.getFromMetadata(meta);
+
+		return type == null || !type.hasModel;
 	}
 	
 	@Override
@@ -206,8 +208,9 @@ public class BlockGenerator extends BlockContainer implements ISpecialBounds, IB
 		int side = MathHelper.floor_double((double)(entityliving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int height = Math.round(entityliving.rotationPitch);
 		int change = 3;
+		GeneratorType type = GeneratorType.getFromMetadata(world.getBlockMetadata(x, y, z));
 
-		if(!GeneratorType.getFromMetadata(world.getBlockMetadata(x, y, z)).hasModel && tileEntity.canSetFacing(0) && tileEntity.canSetFacing(1))
+		if(type != null && !type.hasModel && tileEntity.canSetFacing(0) && tileEntity.canSetFacing(1))
 		{
 			if(height >= 65)
 			{
@@ -294,8 +297,9 @@ public class BlockGenerator extends BlockContainer implements ISpecialBounds, IB
 	{
 		int metadata = world.getBlockMetadata(x, y, z);
 		TileEntityBasicBlock tileEntity = (TileEntityBasicBlock)world.getTileEntity(x, y, z);
+		GeneratorType type = GeneratorType.getFromMetadata(metadata);
 		
-		if(MekanismUtils.isActive(world, x, y, z))
+		if(type != null && MekanismUtils.isActive(world, x, y, z))
 		{
 			float xRandom = (float)x + 0.5F;
 			float yRandom = (float)y + 0.0F + random.nextFloat() * 6.0F / 16.0F;
@@ -544,7 +548,7 @@ public class BlockGenerator extends BlockContainer implements ISpecialBounds, IB
 			return false;
 		}
 		
-		int guiId = GeneratorType.getFromMetadata(metadata).guiId;
+		int guiId = GeneratorType.getFromMetadata(metadata) == null ? -1 : GeneratorType.getFromMetadata(metadata).guiId;
 
 		if(guiId != -1 && tileEntity != null)
 		{
