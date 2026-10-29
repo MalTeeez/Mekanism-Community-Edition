@@ -1,7 +1,7 @@
 [
 {
   "modid": "Mekanism",
-  "name": "Mekanism Community Edition",
+  "name": "Mekanism",
   "description": "Energy, Armor, Tools, Weapons, Machines, Magic.",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
@@ -14,7 +14,7 @@
 },
 {
   "modid": "MekanismGenerators",
-  "name": "MekanismGenerators Community Edition",
+  "name": "MekanismGenerators",
   "description": "Generators module of Mekanism.",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
@@ -27,7 +27,7 @@
 },
 {
   "modid": "MekanismTools",
-  "name": "MekanismTools Community Edition",
+  "name": "MekanismTools",
   "description": "Tools module for Mekanism.",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",

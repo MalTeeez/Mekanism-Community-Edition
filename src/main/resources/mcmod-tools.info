@@ -1,7 +1,7 @@
 [
 {
   "modid": "MekanismTools",
-  "name": "MekanismTools Community Edition",
+  "name": "MekanismTools",
   "description": "Tools module for Mekanism.",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
