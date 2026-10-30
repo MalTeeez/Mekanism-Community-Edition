@@ -777,16 +777,32 @@ public class CommonProxy implements IGuiProvider
 		return (File)FMLInjectionData.data()[6];
 	}
 	
+	/** Machines whose crafting recipes are in the crafting manager. */
+	private final java.util.Set<MachineType> recipesAdded = java.util.EnumSet.noneOf(MachineType.class);
+
+	/**
+	 * Adds or removes machines' crafting recipes as they're enabled or disabled. Only on a change: config syncs run
+	 * after recipe scripts, and adding everything again there brought back recipes that scripts had removed.
+	 */
 	public void updateConfigRecipes()
 	{
 		for(MachineType type : MachineType.getValidMachines())
 		{
+			// The first sync comes before the recipes exist
+			if(type.getRecipes().isEmpty())
+			{
+				continue;
+			}
+
 			if(machines.isEnabled(type.name))
 			{
-				CraftingManager.getInstance().getRecipeList().removeAll(type.getRecipes());
-				CraftingManager.getInstance().getRecipeList().addAll(type.getRecipes());
+				if(recipesAdded.add(type))
+				{
+					CraftingManager.getInstance().getRecipeList().addAll(type.getRecipes());
+				}
 			}
-			else {
+			else if(recipesAdded.remove(type))
+			{
 				CraftingManager.getInstance().getRecipeList().removeAll(type.getRecipes());
 			}
 		}
