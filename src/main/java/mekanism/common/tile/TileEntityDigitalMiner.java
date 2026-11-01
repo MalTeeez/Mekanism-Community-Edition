@@ -333,7 +333,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
 		if(silkTouch)
 		{
-			ret *= 6F;
+			ret *= MekanismConfig.general.minerSilkMultiplier;
 		}
 
 		int baseRad = Math.max(radius-10, 0);
