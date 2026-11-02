@@ -409,6 +409,16 @@ public abstract class PartSidedPipe extends TMultiPart implements TSlottedPart, 
 
 	public abstract TransmitterType getTransmitterType();
 
+	/**
+	 * Multiparts have no block, so this is their break speed: FMP divides it by 30 and treats 1.0 as block hardness 1,
+	 * i.e. it is inverse hardness (1/1.25 == slightly softer than stone). 1.25 per basic tier, +0.25 per tier, capped at 2.
+	 */
+	@Override
+	public float getStrength(MovingObjectPosition hit, EntityPlayer player)
+	{
+		return 1F / Math.min(1.25F + getTransmitterType().getTier().ordinal() * 0.25F, 2F);
+	}
+
 	@Override
 	public Iterable<Cuboid6> getCollisionBoxes()
 	{
