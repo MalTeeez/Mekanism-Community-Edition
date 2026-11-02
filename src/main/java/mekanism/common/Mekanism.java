@@ -1606,6 +1606,11 @@ public class Mekanism
 			hooks.registerAE2P2P();
 		}
 
+		if(Loader.isModLoaded("MineTweaker3"))
+		{
+			mekanism.common.integration.minetweaker.MekanismTweaks.register();
+		}
+
 
 
 		//Packet registrations
