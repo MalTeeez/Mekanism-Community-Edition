@@ -1,7 +1,9 @@
 package mekanism.client.gui;
 
 import mekanism.api.transmitters.TransmissionType;
+import mekanism.api.gas.GasStack;
 import mekanism.client.gui.element.GuiElement;
+import mekanism.client.gui.element.GuiGasGauge;
 import mekanism.common.SideData;
 import mekanism.common.base.ISideConfiguration;
 import mekanism.common.item.ItemConfigurator;
@@ -279,6 +281,20 @@ public abstract class GuiMekanism extends GuiContainer implements IGuiWrapper
 	public int getYPos()
 	{
 		return (height - ySize) / 2;
+	}
+
+	/** Gas shown at GUI-relative coords, for NEI lookups. GUIs that draw gas bars by hand override this. */
+	public GasStack getGasAt(int xAxis, int yAxis)
+	{
+		for(GuiElement element : guiElements)
+		{
+			if(element instanceof GuiGasGauge && element.getBounds(0, 0).contains(xAxis, yAxis))
+			{
+				return ((GuiGasGauge)element).getGas();
+			}
+		}
+
+		return null;
 	}
 
 	protected FontRenderer getFontRenderer()

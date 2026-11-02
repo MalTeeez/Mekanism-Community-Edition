@@ -98,6 +98,7 @@ public class NEIMekanismConfig implements IConfigureNEI
 		API.setGuiOffset(GuiIsotopicCentrifuge.class, IsotopicCentrifugeRecipeHandler.xOffset, IsotopicCentrifugeRecipeHandler.yOffset);
 		
 		GuiContainerManager.addSlotClickHandler(new MekanismSlotClickHandler());
+		GuiContainerManager.addInputHandler(new GasGaugeInputHandler());
 		
 		API.registerNEIGuiHandler(new ElementBoundHandler());
 

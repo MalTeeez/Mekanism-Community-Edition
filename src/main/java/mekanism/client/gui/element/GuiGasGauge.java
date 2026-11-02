@@ -2,6 +2,7 @@ package mekanism.client.gui.element;
 
 import mekanism.api.Coord4D;
 import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
 import mekanism.api.transmitters.TransmissionType;
 import mekanism.client.gui.GuiMekanism;
@@ -109,6 +110,11 @@ public class GuiGasGauge extends GuiGauge<Gas>
 		}
 		
 		return (infoHandler.getTank().getGas() != null) ? infoHandler.getTank().getGas().getGas().getLocalizedName() + ": " + infoHandler.getTank().getStored() : LangUtils.localize("gui.empty");
+	}
+
+	public GasStack getGas()
+	{
+		return dummy || infoHandler == null || infoHandler.getTank() == null ? null : infoHandler.getTank().getGas();
 	}
 
 	public static interface IGasInfoHandler

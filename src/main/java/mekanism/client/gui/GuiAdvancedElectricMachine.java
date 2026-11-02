@@ -66,6 +66,12 @@ public class GuiAdvancedElectricMachine extends GuiMekanism
 	}
 
 	@Override
+	public GasStack getGasAt(int xAxis, int yAxis)
+	{
+		return xAxis >= 61 && xAxis <= 67 && yAxis >= 37 && yAxis <= 49 ? tileEntity.gasTank.getGas() : super.getGasAt(xAxis, yAxis);
+	}
+
+	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		int xAxis = (mouseX - (width - xSize) / 2);

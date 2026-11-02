@@ -2,12 +2,15 @@ package mekanism.client.nei;
 
 import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiUsageRecipe;
+import codechicken.nei.recipe.StackInfo;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import mekanism.api.gas.GasStack;
+import mekanism.api.gas.IGasItem;
 import mekanism.client.gui.IGuiWrapper;
 import mekanism.client.gui.element.GuiElement;
 import mekanism.client.render.MekanismRenderer;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -33,6 +36,59 @@ public abstract class BaseRecipeHandler extends TemplateRecipeHandler implements
 	public static boolean isFluidLookup(String id)
 	{
 		return "fluid".equals(id) || FLUID_LOOKUP_ID.equals(id);
+	}
+
+	/** Item lookups on a gas/fluid container (gas tank, bucket, cell) also show recipes for its contents. */
+	private void loadContentRecipes(String id, Object[] objs, boolean usage)
+	{
+		if(!"item".equals(id) || objs.length != 1 || !(objs[0] instanceof ItemStack))
+		{
+			return;
+		}
+
+		ItemStack stack = (ItemStack)objs[0];
+
+		if(stack.getItem() instanceof IGasItem)
+		{
+			GasStack gas = ((IGasItem)stack.getItem()).getGas(stack);
+
+			if(gas != null && gas.amount > 0)
+			{
+				loadRecipes(usage, "gas", gas);
+			}
+		}
+
+		FluidStack fluid = StackInfo.getFluid(stack);
+
+		if(fluid != null && fluid.getFluid() != null)
+		{
+			loadRecipes(usage, FLUID_LOOKUP_ID, fluid);
+		}
+	}
+
+	private void loadRecipes(boolean usage, String id, Object obj)
+	{
+		if(usage)
+		{
+			loadUsageRecipes(id, obj);
+		}
+		else {
+			loadCraftingRecipes(id, obj);
+		}
+	}
+
+	@Override
+	public void loadCraftingRecipes(String outputId, Object... results)
+	{
+		loadContentRecipes(outputId, results, false);
+		super.loadCraftingRecipes(outputId, results);
+	}
+
+	@Override
+	public void loadUsageRecipes(String inputId, Object... ingredients)
+	{
+		loadContentRecipes(inputId, ingredients, true);
+		super.loadUsageRecipes(inputId, ingredients);
 	}
 
 	public void displayGauge(int length, int xPos, int yPos, int overlayX, int overlayY, int scale, FluidStack fluid, GasStack gas)
@@ -84,7 +140,7 @@ public abstract class BaseRecipeHandler extends TemplateRecipeHandler implements
 	/*
 	 * true = usage, false = recipe
 	 */
-	public boolean doGasLookup(GasStack stack, boolean type)
+	public static boolean doGasLookup(GasStack stack, boolean type)
 	{
 		if(stack != null && stack.amount > 0)
 		{

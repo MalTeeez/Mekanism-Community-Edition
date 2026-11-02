@@ -3,6 +3,7 @@ package mekanism.client.gui;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mekanism.api.Coord4D;
+import mekanism.api.gas.GasStack;
 import mekanism.client.gui.element.*;
 import mekanism.client.gui.element.GuiSlot.SlotOverlay;
 import mekanism.client.gui.element.GuiSlot.SlotType;
@@ -34,6 +35,12 @@ public class GuiGasTank extends GuiMekanism
 		guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiGasTank.png")));
 		guiElements.add(new GuiSlot(SlotType.OUTPUT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiGasTank.png"), 7, 7).with(SlotOverlay.PLUS));
 		guiElements.add(new GuiSlot(SlotType.INPUT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiGasTank.png"), 7, 39).with(SlotOverlay.MINUS));
+	}
+
+	@Override
+	public GasStack getGasAt(int xAxis, int yAxis)
+	{
+		return xAxis >= 65 && xAxis <= 137 && yAxis >= 17 && yAxis <= 27 ? tileEntity.gasTank.getGas() : super.getGasAt(xAxis, yAxis);
 	}
 
 	@Override
